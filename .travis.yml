@@ -1,0 +1,13 @@
+language: php
+php:
+  - 5.5
+  - 5.6
+
+install:
+  - composer install --no-interaction --prefer-dist
+
+script:
+  - phpunit
+
+services:
+  - redis-server

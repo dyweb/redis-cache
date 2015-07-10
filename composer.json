@@ -1,0 +1,25 @@
+{
+    "name": "dyweb/redis-cache",
+    "description": "Simple redis cache library with namespaces",
+    "type": "library",
+    "require": {
+        "php": ">=5.4.0",
+        "predis/predis": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kevin Han",
+            "email": "hanyikai1996@126.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Dy\\": "src/Dy/"
+        }
+    }
+}
