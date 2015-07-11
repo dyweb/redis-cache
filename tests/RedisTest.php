@@ -6,11 +6,13 @@
  * Time: 21:32
  */
 
-use Dy\Cache\Redis as Redis;
+use Dy\Cache\Redis;
 
 class RedisTest extends PHPUnit_Framework_TestCase {
-    public function __construct()
+
+    public function testSet()
     {
-        $this->redis = new Redis();
+        Redis::set('test', '123');
     }
+
 }
