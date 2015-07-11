@@ -12,7 +12,7 @@ class RedisTest extends PHPUnit_Framework_TestCase {
 
     public function testSet()
     {
-        Redis::set('test', '123');
+        Redis::put('test', '123', 1);
     }
 
 }

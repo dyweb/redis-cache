@@ -56,10 +56,10 @@ final class RedisCache
         $this->client->setex($key, $value, $minutes * 60);
     }
 
-    public function get($key, $default = NULL)
+    public function get($key, $default = null)
     {
         $value = $this->client->get($this->getKeyName($key));
-        return $value != NULL ? (is_numeric($value) ? $value : unserialize($value)) : $default;
+        return $value != null ? (is_numeric($value) ? $value : unserialize($value)) : $default;
     }
 
     public function has($key)
@@ -78,7 +78,7 @@ final class RedisCache
     {
         $key = $this->getKeyName($key);
         $value = is_numeric($value) ? $value : serialize($value);
-        return $this->client->set($key, $value);
+        $this->client->set($key, $value);
     }
 
     public function del($key)
