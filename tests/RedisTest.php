@@ -11,11 +11,13 @@ use Dy\Cache\RedisCache;
 final class RedisTest extends PHPUnit_Framework_TestCase
 {
 
+    protected $prefix = 'dy:cache:test';
+
     public function __construct()
     {
         RedisCache::config(array(
             'namespace' => array(
-                'name' => 'dy:cache:test',
+                'name' => $this->prefix,
                 'key_set_name' => 'keys',
                 'lazy_record' => true
             ),
@@ -35,8 +37,17 @@ final class RedisTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(123, RedisCache::get('test2'));
     }
 
+    public function testGetAll()
+    {
+        $keys = RedisCache::getAllKeys();
+        $this->assertContains($this->prefix . ':test', $keys);
+        $this->assertContains($this->prefix . ':test2', $keys);
+    }
+
     public function testClearAll()
     {
         RedisCache::clearAll();
+        $keys = RedisCache::getAllKeys();
+        $this->assertEmpty($keys);
     }
 }
