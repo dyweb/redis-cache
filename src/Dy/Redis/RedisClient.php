@@ -186,6 +186,9 @@ final class RedisClient implements ClientInterface
      */
     public function sadd($key, $members)
     {
+        if (!is_array($members)) {
+            return $this->redis->sAdd($key, $members);
+        }
         switch (count($members)) {
             case 1:
                 return $this->redis->sAdd($key, $members[0]);
@@ -238,6 +241,9 @@ final class RedisClient implements ClientInterface
      */
     public function srem($key, $member)
     {
+        if (!is_array($members)) {
+             return $this->redis->sAdd($key, $members);
+        }
         switch (count($member)) {
             case 1:
                 return $this->redis->sRem($key, $member[0]);
