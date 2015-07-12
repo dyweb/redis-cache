@@ -3,21 +3,21 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2015/7/12
- * Time: 0:51
+ * Time: 21:51
  */
 
 namespace Dy\Redis;
 
-use Predis\Client;
+use Redis as Client;
 
 /**
- * Class PredisClient
+ * Class RedisClient
  *
- * Predis implementation of redis client.
+ * php-redis implementation of redis client.
  *
  * @package Dy\Redis
  */
-final class PredisClient implements ClientInterface
+final class RedisClient implements ClientInterface
 {
     /**
      * The redis instance.
@@ -31,7 +31,18 @@ final class PredisClient implements ClientInterface
      */
     public function __construct(array $config)
     {
-        $this->redis = new Client($config);
+        $this->redis = new Client();
+        if ($config['schema'] == 'unix') {
+            $this->redis->connect($config['path']);
+        } else {
+            if (!isset($config['timeout'])) {
+                $config['timeout'] = 0;
+            }
+            $this->redis->connect($config['host'], $config['port'], $config['timeout']);
+        }
+        if (isset($config['password'])) {
+            $this->redis->auth($config['password']);
+        }
     }
 
     /**
@@ -47,7 +58,7 @@ final class PredisClient implements ClientInterface
      */
     public function quit()
     {
-        $this->redis->quit();
+        $this->redis->close();
     }
 
     /**
@@ -121,7 +132,7 @@ final class PredisClient implements ClientInterface
      */
     public function incrby($key, $increment)
     {
-        return $this->redis->incrby($key, $increment);
+        return $this->redis->incrBy($key, $increment);
     }
 
     /**
@@ -142,7 +153,7 @@ final class PredisClient implements ClientInterface
      */
     public function decrby($key, $decrement)
     {
-        return $this->redis->decrby($key, $decrement);
+        return $this->redis->decrBy($key, $decrement);
     }
 
     /**
@@ -164,14 +175,7 @@ final class PredisClient implements ClientInterface
      */
     public function scan($cursor, $pattern = '', $count = 0)
     {
-        $options = array();
-        if ($pattern != '') {
-            $option['match'] = $pattern;
-        }
-        if ($count != 0) {
-            $option['count'] = $count;
-        }
-        return $this->redis->scan($cursor, $options);
+        return $this->redis->scan($cursor, $pattern, $count);
     }
 
     /**
@@ -182,7 +186,17 @@ final class PredisClient implements ClientInterface
      */
     public function sadd($key, $members)
     {
-        return $this->redis->sadd($key, $members);
+        switch (count($members)) {
+            case 1:
+                return $this->redis->sAdd($key, $members[0]);
+            case 2:
+                return $this->redis->sAdd($key, $members[0], $members[1]);
+            case 3:
+                return $this->redis->sAdd($key, $members[0], $members[1], $members[2]);
+            default:
+                array_unshift($members, $key);
+                return call_user_func_array(array($this->redis, 'sAdd'), $members);
+        }
     }
 
     /**
@@ -192,7 +206,7 @@ final class PredisClient implements ClientInterface
      */
     public function scard($key)
     {
-        return $this->redis->scard($key);
+        return $this->redis->sCard($key);
     }
 
     /**
@@ -203,7 +217,7 @@ final class PredisClient implements ClientInterface
      */
     public function sismember($key, $member)
     {
-        return $this->redis->sismember($key, $member);
+        return $this->redis->sIsMember($key, $member);
     }
 
     /**
@@ -213,7 +227,7 @@ final class PredisClient implements ClientInterface
      */
     public function smembers($key)
     {
-        return $this->redis->smembers($key);
+        return $this->redis->sMembers($key);
     }
 
     /**
@@ -224,7 +238,17 @@ final class PredisClient implements ClientInterface
      */
     public function srem($key, $member)
     {
-        return $this->redis->srem($key, $member);
+        switch (count($member)) {
+            case 1:
+                return $this->redis->sRem($key, $member[0]);
+            case 2:
+                return $this->redis->sRem($key, $member[0], $member[1]);
+            case 3:
+                return $this->redis->sRem($key, $member[0], $member[1], $member[2]);
+            default:
+                array_unshift($members, $key);
+                return call_user_func_array(array($this->redis, 'sRem'), $member);
+        }
     }
 
     /**
@@ -233,17 +257,10 @@ final class PredisClient implements ClientInterface
      * @param int $cursor
      * @param string $pattern
      * @param int $count
-     * @return array
+     * @return array|bool
      */
     public function sscan($key, $cursor, $pattern = '', $count = 0)
     {
-        $options = array();
-        if ($pattern != '') {
-            $option['match'] = $pattern;
-        }
-        if ($count != 0) {
-            $option['count'] = $count;
-        }
-        return $this->redis->sscan($key, $cursor, $options);
+        return $this->redis->sScan($key, $cursor, $pattern, $count);
     }
 }

@@ -11,6 +11,7 @@ namespace Dy\Cache;
 use Closure;
 use Dy\Redis\ClientInterface as Client;
 use Dy\Redis\PredisClient;
+use Dy\Redis\RedisClient;
 
 /**
  * Class RedisRepository
@@ -72,7 +73,7 @@ final class RedisRepository
      */
     public function __construct(array $config)
     {
-        $this->client = new PredisClient($config['connection']);
+        $this->client = $this->getClient($config['connection']);
         $this->namespaceLazyRecord = (bool)$config['namespace']['lazy_record'];
         $this->keySetName = $config['namespace']['key_set_name'];
         $this->setNamespace($config['namespace']['name']);
@@ -373,6 +374,23 @@ final class RedisRepository
         $namespaceObj->clearAllKeys();
         unset($namespaceObj);
         return $this;
+    }
+
+    /**
+     * Get the client instance.
+     *
+     * @param array $config
+     * @return Client
+     */
+    protected function getClient(array $config)
+    {
+        if ($config['client'] == 'redis') {
+            return new RedisClient($config);
+        } elseif ($config['client'] == 'predis') {
+            return new PredisClient($config);
+        } else {
+            throw new \RuntimeException('Unsupported client type');
+        }
     }
 
     /**

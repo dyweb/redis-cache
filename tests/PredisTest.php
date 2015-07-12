@@ -8,7 +8,7 @@
 
 use Dy\Cache\RedisCache;
 
-final class RedisTest extends PHPUnit_Framework_TestCase
+final class PredisTest extends PHPUnit_Framework_TestCase
 {
 
     protected $prefix = 'dy:cache:test';
@@ -17,7 +17,7 @@ final class RedisTest extends PHPUnit_Framework_TestCase
     {
         RedisCache::config(array(
             'connection' => array(
-                'client' => 'redis',
+                'client' => 'predis',
                 'schema' => 'tcp',
                 'host' => '127.0.0.1',
                 'port' => 6379,

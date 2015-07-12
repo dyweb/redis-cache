@@ -120,10 +120,11 @@ interface ClientInterface
      * Incrementally iterate the keys space.
      *
      * @param int $cursor
-     * @param array $options
+     * @param string $pattern
+     * @param int $count
      * @return array
      */
-    public function scan($cursor, array $options = null);
+    public function scan($cursor, $pattern = '', $count = 0);
 
     /**
      * Add the specified members to the set stored at key.
@@ -180,8 +181,9 @@ interface ClientInterface
      *
      * @param string $key
      * @param int $cursor
-     * @param array $options
+     * @param string $pattern
+     * @param int $count
      * @return array
      */
-    public function sscan($key, $cursor, array $options = null);
+    public function sscan($key, $cursor, $pattern = '', $count = 0);
 }

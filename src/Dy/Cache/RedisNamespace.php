@@ -143,7 +143,7 @@ final class RedisNamespace
             $regexp = preg_quote($this->namespace) . '*';
             $cursor = 0;
             do {
-                $result = $this->client->scan($cursor, array('match' => $regexp));
+                $result = $this->client->scan($cursor, $regexp);
                 $cursor = $result[0];
                 if (!empty($result[1])) {
                     $this->client->del($result[1]);

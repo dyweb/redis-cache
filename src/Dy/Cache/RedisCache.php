@@ -48,8 +48,14 @@ final class RedisCache extends SingletonFacade
      */
     protected static $config = array(
         'connection' => array(
+            //'schema' => 'unix',
+            //'path' =>'/var/run/redis.sock',
+            'client' => 'predis',
+            'schema' => 'tcp',
             'host' => '127.0.0.1',
-            'port' => 6379
+            'port' => 6379,
+            'password' => null,
+            'timeout' => 5.0
         ),
         'namespace' => array(
             'name' => '',
