@@ -241,8 +241,8 @@ final class RedisClient implements ClientInterface
      */
     public function srem($key, $member)
     {
-        if (!is_array($members)) {
-             return $this->redis->sAdd($key, $members);
+        if (!is_array($member)) {
+             return $this->redis->sAdd($key, $member);
         }
         switch (count($member)) {
             case 1:
@@ -252,7 +252,7 @@ final class RedisClient implements ClientInterface
             case 3:
                 return $this->redis->sRem($key, $member[0], $member[1], $member[2]);
             default:
-                array_unshift($members, $key);
+                array_unshift($member, $key);
                 return call_user_func_array(array($this->redis, 'sRem'), $member);
         }
     }
