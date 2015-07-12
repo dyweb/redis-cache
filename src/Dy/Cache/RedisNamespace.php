@@ -169,8 +169,12 @@ final class RedisNamespace
         }
 
         // only Redis 2.4+ supported
-        $this->client->sadd($this->getKeyName($this->keySetName), $addedKeys);
-        $this->client->srem($this->getKeyName($this->keySetName), $deletedKeys);
+        if (count($addedKeys) > 0) {
+            $this->client->sadd($this->getKeyName($this->keySetName), $addedKeys);
+        }
+        if (count($deletedKeys) > 0) {
+            $this->client->srem($this->getKeyName($this->keySetName), $deletedKeys);
+        }
         $this->keyRecords = array();
     }
 

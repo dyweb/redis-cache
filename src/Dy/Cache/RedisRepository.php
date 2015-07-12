@@ -162,7 +162,7 @@ final class RedisRepository
     {
         $key = $this->getKeyName($key);
         $value = is_numeric($value) ? $value : serialize($value);
-        $this->client->setex($key, $value, $minutes * 60);
+        $this->client->setex($key, $minutes * 60, $value);
         $this->recordKey($key, $value);
         return $this;
     }

@@ -19,7 +19,7 @@ final class RedisTest extends PHPUnit_Framework_TestCase
                 'key_set_name' => 'keys',
                 'lazy_record' => true
             ),
-            'memory_cache' => true
+            'memory_cache' => false
         ));
     }
 
@@ -29,10 +29,10 @@ final class RedisTest extends PHPUnit_Framework_TestCase
         RedisCache::put('test2', '123', 1);
     }
 
-    public function testSet()
+    public function testGet()
     {
-        $this->assertEquals(RedisCache::get('test'), 'aaa');
-        $this->assertEquals(RedisCache::get('test2'), '123');
+        $this->assertEquals('aaa', RedisCache::get('test'));
+        $this->assertEquals(123, RedisCache::get('test2'));
     }
 
 }
