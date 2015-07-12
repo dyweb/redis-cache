@@ -10,8 +10,6 @@ namespace Dy\Cache;
 
 use Closure;
 use Dy\Redis\ClientInterface as Client;
-use Dy\Redis\PredisClient;
-use Dy\Redis\RedisClient;
 
 /**
  * Class RedisRepository
@@ -385,12 +383,13 @@ final class RedisRepository
     protected function getClient(array $config)
     {
         if ($config['client'] == 'redis') {
-            return new RedisClient($config);
+            $className = '\\Dy\\Redis\\RedisClient';
         } elseif ($config['client'] == 'predis') {
-            return new PredisClient($config);
+            $className = '\\Dy\\Redis\\PredisClient';
         } else {
             throw new \RuntimeException('Unsupported client type');
         }
+        return new $className($config);
     }
 
     /**

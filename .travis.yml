@@ -11,8 +11,8 @@ php:
 install:
   - composer install --no-interaction --prefer-dist
 
-before-script:
-  - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+before_script:
+  - phpenv config-add myconfig.ini
 
 script:
   - phpunit
