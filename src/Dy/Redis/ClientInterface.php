@@ -169,7 +169,7 @@ interface ClientInterface
      * set and this command returns 0.
      *
      * @param string $key
-     * @param string $member
+     * @param array $member
      * @return int The number of members that were removed from the
      *             set, not including non existing members
      */

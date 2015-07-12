@@ -6,13 +6,33 @@
  * Time: 21:32
  */
 
-use Dy\Cache\Redis;
+use Dy\Cache\RedisCache;
 
-class RedisTest extends PHPUnit_Framework_TestCase {
+final class RedisTest extends PHPUnit_Framework_TestCase
+{
+
+    public function __construct()
+    {
+        RedisCache::config(array(
+            'namespace' => array(
+                'name' => 'dy:cache:test',
+                'key_set_name' => 'keys',
+                'lazy_record' => true
+            ),
+            'memory_cache' => true
+        ));
+    }
+
+    public function testPut()
+    {
+        RedisCache::put('test', 'aaa', 1);
+        RedisCache::put('test2', '123', 1);
+    }
 
     public function testSet()
     {
-        Redis::put('test', '123', 1);
+        $this->assertEquals(RedisCache::get('test'), 'aaa');
+        $this->assertEquals(RedisCache::get('test2'), '123');
     }
 
 }

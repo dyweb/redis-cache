@@ -19,7 +19,7 @@ namespace Dy\Common;
 abstract class SingletonFacade extends Facade
 {
 
-    protected static $instance;
+    protected static $instance = null;
 
     /**
      * Create a new singleton instance and return the instance.
@@ -39,7 +39,7 @@ abstract class SingletonFacade extends Facade
      */
     protected static function getInstance()
     {
-        if (static::$instance != null) {
+        if (static::$instance !== null) {
             return static::$instance;
         }
         return static::$instance = static::createInstance();

@@ -25,9 +25,21 @@ final class PredisClient implements ClientInterface
      */
     protected $redis;
 
+    /**
+     * Constructor.
+     * @param array $config
+     */
     public function __construct(array $config)
     {
         $this->redis = new Client($config);
+    }
+
+    /**
+     * Destructor.
+     */
+    public function __destruct()
+    {
+        $this->quit();
     }
 
     /**
@@ -199,7 +211,7 @@ final class PredisClient implements ClientInterface
     /**
      * @inheritdoc
      * @param string $key
-     * @param string $member
+     * @param array $member
      * @return int
      */
     public function srem($key, $member)
