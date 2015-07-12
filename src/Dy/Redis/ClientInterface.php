@@ -65,10 +65,10 @@ interface ClientInterface
     /**
      * Removes the specified keys. A key is ignored if it does not exist.
      *
-     * @param array $keys
+     * @param array|mixed $keys
      * @return int
      */
-    public function del(array $keys);
+    public function del($keys);
 
     /**
      * Increments the number stored at key by one. If the key does not exist,
@@ -132,10 +132,10 @@ interface ClientInterface
      * created before adding the specified members.
      *
      * @param string $key
-     * @param array $members
+     * @param array|mixed $members
      * @return int The number of elements that were added to the set
      */
-    public function sadd($key, array $members);
+    public function sadd($key, $members);
 
     /**
      * Returns the set cardinality (number of elements) of the set stored at key.

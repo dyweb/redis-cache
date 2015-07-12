@@ -36,6 +36,7 @@ final class RedisNamespace
 
     /**
      * Name of the set storing all the cached key names.
+     * The function will be disabled if an empty value is given.
      *
      * @var string
      */
@@ -89,7 +90,7 @@ final class RedisNamespace
      */
     public function recordKey($key)
     {
-        $keyRecords[$key] = true;
+        $this->keyRecords[$key] = true;
         if (!$this->lazyRecord) {
             $this->flushRecord();
         }
@@ -102,7 +103,7 @@ final class RedisNamespace
      */
     public function deleteKey($key)
     {
-        $keyRecords[$key] = false;
+        $this->keyRecords[$key] = false;
         if (!$this->lazyRecord) {
             $this->flushRecord();
         }
@@ -110,7 +111,7 @@ final class RedisNamespace
 
     /**
      * Get all the keys in the cache.
-     * Note: This function is time-consuming if $keySeyName is not set,
+     * Note: This function is time-consuming if $keySetName is not set,
      * so you should execute it when few users access the server.
      *
      * @return array
@@ -119,7 +120,7 @@ final class RedisNamespace
     {
         $this->flushRecord();
         if (!empty($this->keySetName)) {
-            return $this->client->smembers($this->keySetName);
+            return $this->client->smembers($this->getKeyName($this->keySetName));
         } else {
             return $this->client->keys(preg_quote($this->namespace) . '*');
         }
@@ -134,12 +135,15 @@ final class RedisNamespace
     {
         if (!empty($this->keySetName)) {
             $keys = $this->getAllKeys();
-            $this->client->del($keys);
+            if (count($keys) > 0) {
+                $this->client->del($keys);
+                $this->client->srem($this->getKeyName($this->keySetName), $keys);
+            }
         } else {
             $regexp = preg_quote($this->namespace) . '*';
             $cursor = 0;
             do {
-                $result = $this->client->scan($cursor, array($regexp));
+                $result = $this->client->scan($cursor, array('match' => $regexp));
                 $cursor = $result[0];
                 if (!empty($result[1])) {
                     $this->client->del($result[1]);

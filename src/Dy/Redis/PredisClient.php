@@ -95,10 +95,10 @@ final class PredisClient implements ClientInterface
 
     /**
      * @inheritdoc
-     * @param array $keys
+     * @param array|mixed $keys
      * @return int
      */
-    public function del(array $keys)
+    public function del($keys)
     {
         return $this->redis->del($keys);
     }
@@ -169,10 +169,10 @@ final class PredisClient implements ClientInterface
     /**
      * @inheritdoc
      * @param string $key
-     * @param array $members
+     * @param array|mixed $members
      * @return int
      */
-    public function sadd($key, array $members)
+    public function sadd($key, $members)
     {
         return $this->redis->sadd($key, $members);
     }
@@ -211,7 +211,7 @@ final class PredisClient implements ClientInterface
     /**
      * @inheritdoc
      * @param string $key
-     * @param array $member
+     * @param array|mixed $member
      * @return int
      */
     public function srem($key, $member)

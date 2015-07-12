@@ -36,6 +36,7 @@ final class RedisRepository
 
     /**
      * Name of the set storing all the cached key names.
+     * The function will be disabled if an empty value is given.
      *
      * @var string
      */
@@ -197,7 +198,8 @@ final class RedisRepository
             return $cachedValue;
         }
 
-        $value = $this->client->get($this->getKeyName($key));
+        $key = $this->getKeyName($key);
+        $value = $this->client->get($key);
         $value = $value !== null ?
             (is_numeric($value) ? $value : unserialize($value)) :
             ($default instanceof Closure ? $default() : $default);
@@ -282,7 +284,8 @@ final class RedisRepository
      */
     public function increment($key, $value = 1)
     {
-        $value = $this->client->incrby($this->getKeyName($key), $value);
+        $key = $this->getKeyName($key);
+        $value = $this->client->incrby($key, $value);
         $this->recordKey($key, $value);
         return $value;
     }
@@ -296,7 +299,8 @@ final class RedisRepository
      */
     public function decrement($key, $value = 1)
     {
-        $value = $this->client->decrby($this->getKeyName($key), $value);
+        $key = $this->getKeyName($key);
+        $value = $this->client->decrby($key, $value);
         $this->recordKey($key, $value);
         return $value;
     }

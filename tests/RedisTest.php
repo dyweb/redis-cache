@@ -35,4 +35,8 @@ final class RedisTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(123, RedisCache::get('test2'));
     }
 
+    public function testClearAll()
+    {
+        RedisCache::clearAll();
+    }
 }
