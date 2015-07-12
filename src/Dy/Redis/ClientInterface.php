@@ -81,5 +81,4 @@ interface ClientInterface
      * @return int
      */
     public function decrby($key, $decrement);
-
 }

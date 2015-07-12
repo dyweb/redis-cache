@@ -96,5 +96,4 @@ final class RedisCache
     {
         return $this->namespace . $key;
     }
-
 }

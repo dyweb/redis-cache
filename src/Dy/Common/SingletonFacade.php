@@ -39,9 +39,9 @@ abstract class SingletonFacade extends Facade
      */
     protected static function getInstance()
     {
-        if (static::$instance != NULL)
+        if (static::$instance != null) {
             return static::$instance;
+        }
         return static::$instance = static::createInstance();
     }
-
 }
