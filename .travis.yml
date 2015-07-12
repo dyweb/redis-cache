@@ -11,6 +11,9 @@ php:
 install:
   - composer install --no-interaction --prefer-dist
 
+before-script:
+  - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
 script:
   - phpunit
   - sh -c "./vendor/bin/phpcs --standard=PSR2 ./src/"

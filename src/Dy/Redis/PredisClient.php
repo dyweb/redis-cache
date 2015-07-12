@@ -31,7 +31,7 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * Close the Redis connection.
+     * @inheritdoc
      */
     public function quit()
     {
@@ -39,7 +39,8 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @param $key
+     * @inheritdoc
+     * @param string $key
      * @return int
      */
     public function exists($key)
@@ -48,6 +49,7 @@ final class PredisClient implements ClientInterface
     }
 
     /**
+     * @inheritdoc
      * @param string $key
      * @param string $value
      * @return mixed
@@ -58,6 +60,7 @@ final class PredisClient implements ClientInterface
     }
 
     /**
+     * @inheritdoc
      * @param string $key
      * @param int $seconds
      * @param string $value
@@ -69,6 +72,7 @@ final class PredisClient implements ClientInterface
     }
 
     /**
+     * @inheritdoc
      * @param string $key
      * @return string
      */
@@ -78,6 +82,7 @@ final class PredisClient implements ClientInterface
     }
 
     /**
+     * @inheritdoc
      * @param array $keys
      * @return int
      */
@@ -87,6 +92,7 @@ final class PredisClient implements ClientInterface
     }
 
     /**
+     * @inheritdoc
      * @param string $key
      * @return int
      */
@@ -96,6 +102,7 @@ final class PredisClient implements ClientInterface
     }
 
     /**
+     * @inheritdoc
      * @param string $key
      * @param int $increment
      * @return int
@@ -106,6 +113,7 @@ final class PredisClient implements ClientInterface
     }
 
     /**
+     * @inheritdoc
      * @param string $key
      * @return int
      */
@@ -115,6 +123,7 @@ final class PredisClient implements ClientInterface
     }
 
     /**
+     * @inheritdoc
      * @param string $key
      * @param int $decrement
      * @return int
@@ -122,5 +131,91 @@ final class PredisClient implements ClientInterface
     public function decrby($key, $decrement)
     {
         return $this->redis->decrby($key, $decrement);
+    }
+
+    /**
+     * @inheritdoc
+     * @param string $pattern
+     * @return array
+     */
+    public function keys($pattern)
+    {
+        return $this->redis->keys($pattern);
+    }
+
+    /**
+     * @inheritdoc
+     * @param int $cursor
+     * @param array $options
+     * @return array
+     */
+    public function scan($cursor, array $options = null)
+    {
+        return $this->redis->scan($cursor, $options);
+    }
+
+    /**
+     * @inheritdoc
+     * @param string $key
+     * @param array $members
+     * @return int
+     */
+    public function sadd($key, array $members)
+    {
+        return $this->redis->sadd($key, $members);
+    }
+
+    /**
+     * @inheritdoc
+     * @param string $key
+     * @return int
+     */
+    public function scard($key)
+    {
+        return $this->redis->scard($key);
+    }
+
+    /**
+     * @inheritdoc
+     * @param string $key
+     * @param string $member
+     * @return int
+     */
+    public function sismember($key, $member)
+    {
+        return $this->redis->sismember($key, $member);
+    }
+
+    /**
+     * @inheritdoc
+     * @param string $key
+     * @return array
+     */
+    public function smembers($key)
+    {
+        return $this->redis->smembers($key);
+    }
+
+    /**
+     * @inheritdoc
+     * @param string $key
+     * @param string $member
+     * @return int
+     */
+    public function srem($key, $member)
+    {
+        return $this->redis->srem($key, $member);
+    }
+
+    /**
+     * @inheritdoc
+     * @param string $key
+     * @param int $cursor
+     * @param array $options
+     * @return array
+     */
+    public function sscan($key, $cursor, array $options = null)
+    {
+        return $this->redis->sscan($key, $cursor, $options);
     }
 }

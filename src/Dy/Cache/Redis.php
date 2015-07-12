@@ -18,15 +18,20 @@ use Dy\Common\SingletonFacade;
  * @static
  * @package Dy\Cache
  *
- * @method static mixed  setNamespace(string $namespace)
- * @method static string getNamespace(string $namespace)
- * @method static mixed  put(string $key, mixed $value, int $minutes)
- * @method static mixed  get(string $key, mixed $default = null)
- * @method static bool   has(string $key)
- * @method static mixed  pull(string $key)
- * @method static mixed  forever(string $key, mixed $value)
- * @method static bool   del(string $key)
- * @method static bool   forget(string $key)
+ * @method static RedisCache    setNamespace(string $namespace)
+ * @method static string        getNamespace(string $namespace)
+ * @method static RedisCache    setMemoryCacheSwitch(bool $value)
+ * @method static bool          getMemoryCacheSwitch()
+ * @method static RedisCache    put(string $key, mixed $value, int $minutes)
+ * @method static RedisCache    set(string $key, mixed $value, int $minutes)
+ * @method static mixed         get(string $key, mixed $default = null)
+ * @method static bool          has(string $key)
+ * @method static mixed         pull(string $key)
+ * @method static RedisCache    forever(string $key, mixed $value)
+ * @method static bool          del(string $key)
+ * @method static bool          forget(string $key)
+ * @method static int           increment($key, $value = 1)
+ * @method static int           decrement($key, $value = 1)
  */
 final class Redis extends SingletonFacade
 {
