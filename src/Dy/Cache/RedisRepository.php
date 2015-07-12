@@ -76,6 +76,9 @@ final class RedisRepository
         $this->keySetName = $config['namespace']['key_set_name'];
         $this->setNamespace($config['namespace']['name']);
         $this->enableMemoryCache = $config['memory_cache'];
+        if ($this->enableMemoryCache) {
+            $this->memoryCache = new MemoryRepository();
+        }
     }
 
     /**
