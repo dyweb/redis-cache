@@ -21,7 +21,7 @@ install:
   - composer install --no-interaction --prefer-dist
 
 before_script:
-  - if [$PHP_VER = "5"]; then phpenv config-add myconfig.ini fi
+  - if [ $PHP_VER = "5" ]; then phpenv config-add myconfig.ini; fi
 
 script:
   - phpunit
