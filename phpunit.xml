@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true" bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="basic">
-            <directory>./tests</directory>
-            <exclude>./tests/RedisTest.php</exclude>
+        <testsuite name="predis">
+            <file>./tests/predis/PredisTestSet.php</file>
+        </testsuite>
+        <testsuite name="predis-noset">
+            <file>./tests/predis/PredisTestNoSet.php</file>
         </testsuite>
         <testsuite name="php-redis">
-            <file phpVersion="7.0.0" phpVersionOperator="&lt;=">./tests/RedisTest.php</file>
+            <file phpVersion="7.0.0" phpVersionOperator="&lt;">./tests/phpredis/RedisTestSet.php</file>
+        </testsuite>
+        <testsuite name="php-redis-noset">
+            <file phpVersion="7.0.0" phpVersionOperator="&lt;">./tests/phpredis/RedisTestNoSet.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

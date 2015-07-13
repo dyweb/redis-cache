@@ -27,7 +27,9 @@ before_script:
   - if [ $PHP_VER = "5" ]; then phpenv config-add myconfig.ini; fi
 
 script:
-  - phpunit
+  - phpunit --test-suite=predis
+  - phpunit --test-suite=predis-noset
+  - if [ $PHP_VER = "5" ]; then phpunit --test-suite=php-redis; phpunit --test-suite=php-redis-noset;fi
   - sh -c "./vendor/bin/phpcs --standard=PSR2 ./src/"
 
 services:

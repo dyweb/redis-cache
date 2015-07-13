@@ -140,7 +140,7 @@ final class RedisNamespace
                 $this->client->srem($this->getKeyName($this->keySetName), $keys);
             }
         } else {
-            $regexp = preg_quote($this->namespace) . '*';
+            $regexp = preg_quote($this->getPrefix()) . '*';
             $cursor = 0;
             do {
                 $result = $this->client->scan($cursor, $regexp);

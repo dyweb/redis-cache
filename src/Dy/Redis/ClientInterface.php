@@ -26,7 +26,7 @@ interface ClientInterface
      * Returns if key exists.
      *
      * @param $key
-     * @return int
+     * @return bool
      */
     public function exists($key);
 
@@ -37,7 +37,6 @@ interface ClientInterface
      *
      * @param string $key
      * @param string $value
-     * @return mixed
      */
     public function set($key, $value);
 
@@ -48,17 +47,16 @@ interface ClientInterface
      * @param string $key
      * @param int $seconds
      * @param string $value
-     * @return int
      */
     public function setex($key, $seconds, $value);
 
     /**
      * Get the value of key. If the key does not exist the special value
-     * null is returned. An error is returned if the value stored at key
+     * false is returned. An error is returned if the value stored at key
      * is not a string, because GET only handles string values.
      *
      * @param string $key
-     * @return string
+     * @return string|false
      */
     public function get($key);
 
@@ -151,7 +149,7 @@ interface ClientInterface
      *
      * @param string $key
      * @param string $member
-     * @return int
+     * @return bool
      */
     public function sismember($key, $member);
 

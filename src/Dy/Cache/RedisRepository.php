@@ -75,9 +75,8 @@ final class RedisRepository
         $this->namespaceLazyRecord = (bool)$config['namespace']['lazy_record'];
         $this->keySetName = $config['namespace']['key_set_name'];
         $this->setNamespace($config['namespace']['name']);
-        $this->enableMemoryCache = $config['memory_cache'];
-        if ($this->enableMemoryCache) {
-            $this->memoryCache = new MemoryRepository();
+        if ($config['memory_cache']) {
+            $this->enableMemoryCache();
         }
     }
 
@@ -87,6 +86,15 @@ final class RedisRepository
     public function __destruct()
     {
         $this->clearNamespace();
+    }
+
+    /**
+     * Get the redis client.
+     * @return Client
+     */
+    public function client()
+    {
+        return $this->client;
     }
 
     /**
@@ -126,8 +134,10 @@ final class RedisRepository
     public function enableMemoryCache()
     {
         $this->enableMemoryCache = true;
-        if ($this->memoryCache === null) {
+        if ($this->memoryCache !== null) {
             $this->memoryCache->clearAll();
+        } else {
+            $this->memoryCache = new MemoryRepository();
         }
         return $this;
     }
@@ -199,11 +209,13 @@ final class RedisRepository
 
         $key = $this->getKeyName($key);
         $value = $this->client->get($key);
-        $value = $value !== null ?
-            (is_numeric($value) ? $value : unserialize($value)) :
-            ($default instanceof Closure ? $default() : $default);
-        $this->recordKey($key, $value);
-        return $value;
+        if ($value != false) {
+            $value = is_numeric($value) ? $value : unserialize($value);
+            $this->recordKey($key, $value);
+            return $value;
+        } else {
+            return $default instanceof Closure ? $default() : $default;
+        }
     }
 
     /**
@@ -218,7 +230,7 @@ final class RedisRepository
         if ($cachedValue !== null) {
             return true;
         }
-        return $this->client->exists($this->getKeyName($key)) === 1;
+        return $this->client->exists($this->getKeyName($key));
     }
 
     /**
@@ -331,7 +343,7 @@ final class RedisRepository
         if ($this->namespace->toString() == $namespace) {
             return $this->getAllKeys();
         }
-        $namespaceObj = new RedisNamespace($namespace, $this->client);
+        $namespaceObj = new RedisNamespace($namespace, $this->client, $this->keySetName);
         $keys = $namespaceObj->getAllKeys();
         unset($namespaceObj);
         return $keys;
@@ -347,7 +359,7 @@ final class RedisRepository
     public function clearAll()
     {
         $this->namespace->clearAllKeys();
-        if ($this->memoryCache !== null) {
+        if ($this->enableMemoryCache) {
             $this->memoryCache->clearAll();
         }
         return $this;
@@ -368,7 +380,7 @@ final class RedisRepository
             $this->clearAll();
             return $this;
         }
-        $namespaceObj = new RedisNamespace($namespace, $this->client);
+        $namespaceObj = new RedisNamespace($namespace, $this->client, $this->keySetName);
         $namespaceObj->clearAllKeys();
         unset($namespaceObj);
         return $this;
@@ -402,7 +414,7 @@ final class RedisRepository
             unset($this->namespace);
         }
 
-        if ($this->memoryCache !== null) {
+        if ($this->enableMemoryCache) {
             $this->memoryCache->clearAll();
         }
     }

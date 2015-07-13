@@ -53,7 +53,7 @@ final class PredisClient implements ClientInterface
     /**
      * @inheritdoc
      * @param string $key
-     * @return int
+     * @return bool
      */
     public function exists($key)
     {
@@ -64,11 +64,10 @@ final class PredisClient implements ClientInterface
      * @inheritdoc
      * @param string $key
      * @param string $value
-     * @return mixed
      */
     public function set($key, $value)
     {
-        return $this->redis->set($key, $value);
+        $this->redis->set($key, $value);
     }
 
     /**
@@ -76,17 +75,16 @@ final class PredisClient implements ClientInterface
      * @param string $key
      * @param int $seconds
      * @param string $value
-     * @return int
      */
     public function setex($key, $seconds, $value)
     {
-        return $this->redis->setex($key, $seconds, $value);
+        $this->redis->setex($key, $seconds, $value);
     }
 
     /**
      * @inheritdoc
      * @param string $key
-     * @return string
+     * @return string|false
      */
     public function get($key)
     {
@@ -160,18 +158,18 @@ final class PredisClient implements ClientInterface
      * @param int $cursor
      * @param string $pattern
      * @param int $count
-     * @return array|bool
+     * @return array
      */
     public function scan($cursor, $pattern = '', $count = 0)
     {
-        $options = array();
+        $option = array();
         if ($pattern != '') {
             $option['match'] = $pattern;
         }
         if ($count != 0) {
             $option['count'] = $count;
         }
-        return $this->redis->scan($cursor, $options);
+        return $this->redis->scan($cursor, $option);
     }
 
     /**
@@ -199,7 +197,7 @@ final class PredisClient implements ClientInterface
      * @inheritdoc
      * @param string $key
      * @param string $member
-     * @return int
+     * @return bool
      */
     public function sismember($key, $member)
     {

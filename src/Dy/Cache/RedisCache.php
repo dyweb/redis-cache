@@ -9,6 +9,7 @@
 namespace Dy\Cache;
 
 use Dy\Common\SingletonFacade;
+use Dy\Redis\ClientInterface as Client;
 
 /**
  * Class RedisCache
@@ -19,8 +20,9 @@ use Dy\Common\SingletonFacade;
  * @package Dy\Cache
  * @see RedisRepository
  *
+ * @method static Client            client()
  * @method static RedisRepository   setNamespace(string $namespace, mixed $lazyRecord = null)
- * @method static string            getNamespace(string $namespace)
+ * @method static string            getNamespace()
  * @method static RedisRepository   enableMemoryCache()
  * @method static RedisRepository   disableMemoryCache()
  * @method static bool              usingMemoryCache()

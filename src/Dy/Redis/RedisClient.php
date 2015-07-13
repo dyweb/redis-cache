@@ -64,7 +64,7 @@ final class RedisClient implements ClientInterface
     /**
      * @inheritdoc
      * @param string $key
-     * @return int
+     * @return bool
      */
     public function exists($key)
     {
@@ -75,11 +75,10 @@ final class RedisClient implements ClientInterface
      * @inheritdoc
      * @param string $key
      * @param string $value
-     * @return mixed
      */
     public function set($key, $value)
     {
-        return $this->redis->set($key, $value);
+        $this->redis->set($key, $value);
     }
 
     /**
@@ -87,17 +86,16 @@ final class RedisClient implements ClientInterface
      * @param string $key
      * @param int $seconds
      * @param string $value
-     * @return int
      */
     public function setex($key, $seconds, $value)
     {
-        return $this->redis->setex($key, $seconds, $value);
+        $this->redis->setex($key, $seconds, $value);
     }
 
     /**
      * @inheritdoc
      * @param string $key
-     * @return string
+     * @return string|false
      */
     public function get($key)
     {
@@ -121,7 +119,11 @@ final class RedisClient implements ClientInterface
      */
     public function incr($key)
     {
-        return $this->redis->incr($key);
+        $value = $this->redis->incr($key);
+        if ($value === false) {
+            throw new \RuntimeException('Increased key is not an integer');
+        }
+        return $value;
     }
 
     /**
@@ -132,7 +134,11 @@ final class RedisClient implements ClientInterface
      */
     public function incrby($key, $increment)
     {
-        return $this->redis->incrBy($key, $increment);
+        $value = $this->redis->incrBy($key, $increment);
+        if ($value === false) {
+            throw new \RuntimeException('Increased key is not an integer');
+        }
+        return $value;
     }
 
     /**
@@ -142,7 +148,11 @@ final class RedisClient implements ClientInterface
      */
     public function decr($key)
     {
-        return $this->redis->decr($key);
+        $value = $this->redis->decr($key);
+        if ($value === false) {
+            throw new \RuntimeException('Decreased key is not an integer');
+        }
+        return $value;
     }
 
     /**
@@ -153,7 +163,11 @@ final class RedisClient implements ClientInterface
      */
     public function decrby($key, $decrement)
     {
-        return $this->redis->decrBy($key, $decrement);
+        $value = $this->redis->decrBy($key, $decrement);
+        if ($value === false) {
+            throw new \RuntimeException('Decreased key is not an integer');
+        }
+        return $value;
     }
 
     /**
@@ -171,11 +185,19 @@ final class RedisClient implements ClientInterface
      * @param int $cursor
      * @param string $pattern
      * @param int $count
-     * @return array|bool
+     * @return array
      */
     public function scan($cursor, $pattern = '', $count = 0)
     {
-        return $this->redis->scan($cursor, $pattern, $count);
+        if ($cursor == 0) {
+            $cursor = null;
+        }
+        $this->redis->setOption(Client::OPT_SCAN, Client::SCAN_RETRY);
+        $result = $this->redis->scan($cursor, $pattern, $count);
+        if ($result == false) {
+            $result = array();
+        }
+        return array($cursor, $result);
     }
 
     /**
@@ -216,7 +238,7 @@ final class RedisClient implements ClientInterface
      * @inheritdoc
      * @param string $key
      * @param string $member
-     * @return int
+     * @return bool
      */
     public function sismember($key, $member)
     {
@@ -263,10 +285,22 @@ final class RedisClient implements ClientInterface
      * @param int $cursor
      * @param string $pattern
      * @param int $count
-     * @return array|bool
+     * @return array
      */
     public function sscan($key, $cursor, $pattern = '', $count = 0)
     {
-        return $this->redis->sScan($key, $cursor, $pattern, $count);
+        $result = $this->redis->sScan($key, $cursor, $pattern, $count);
+        if ($result == false) {
+            $result = array(
+                0,
+                array()
+            );
+        } else {
+            $result = array(
+                $cursor,
+                array($result)
+            );
+        }
+        return $result;
     }
 }
