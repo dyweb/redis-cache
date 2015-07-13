@@ -6,7 +6,7 @@
             <exclude>./tests/RedisTest.php</exclude>
         </testsuite>
         <testsuite name="php-redis">
-            <file phpVersion="7.0.0" phpVersionOperator="&lt;">./tests/RedisTest.php</file>
+            <file phpVersion="7.0.0" phpVersionOperator="&lt;=">./tests/RedisTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

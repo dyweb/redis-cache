@@ -16,6 +16,9 @@ matrix:
       env: PHP_VER=hhvm
     - php: nightly
       env: PHP_VER=7
+  allow_failures:
+    - php: 7.0
+    - php: nightly
 
 install:
   - composer install --no-interaction --prefer-dist
