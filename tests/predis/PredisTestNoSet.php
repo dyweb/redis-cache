@@ -8,7 +8,7 @@
 
 use Dy\Cache\RedisCache;
 
-final class PredisTest extends PHPUnit_Framework_TestCase
+final class PredisTestNoSet extends PHPUnit_Framework_TestCase
 {
     protected $prefix = 'dy:cache:ptest';
 
