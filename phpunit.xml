@@ -13,5 +13,9 @@
         <testsuite name="php-redis-noset">
             <file phpVersion="7.0.0" phpVersionOperator="&lt;">./tests/phpredis/RedisTestNoSet.php</file>
         </testsuite>
+
+        <testsuite name="psr6">
+            <file>./tests/psr6/PsrTest.php</file>
+        </testsuite>
     </testsuites>
 </phpunit>
