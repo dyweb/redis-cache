@@ -141,7 +141,7 @@ class Item
     {
         $date = new \DateTime();
         $this->minute = ($expiration-$date)/60;
-        if (!isset($this->value) )
+        if (!isset($this->value))
         {
             $this->value=0;
         }
@@ -166,7 +166,7 @@ class Item
     public function expiresAfter($time)
     {
         $this->minute = $time;
-        if (!isset($this->value) )
+        if (!isset($this->value))
         {
             $this->value=0;
         }
