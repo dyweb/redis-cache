@@ -166,7 +166,7 @@ class Item
     public function expiresAfter($time)
     {
         $this->minute = $time;
-        if (!isset($this->value))
+        if (!isset($this->value)) 
         {
             $this->value=0;
         }
