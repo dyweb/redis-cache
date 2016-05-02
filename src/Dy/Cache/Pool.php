@@ -17,18 +17,18 @@ class Pool
     /**
      * A RedisRepository instance this Item used.
      *
-     * @var RedisCache
+     * @var RedisRepository
      */
-    protected $redisCache;
+    protected $redisRepository;
 
 
     /**
      * Constructor.
-     * @param RedisCache
+     * @param RedisRepository
      */
-    public function __construct($redisCache)
+    public function __construct($redisRepository)
     {
-        $this->redisCache=$redisCache;
+        $this->redisRepository=$redisRepository;
     }
 
 
@@ -53,8 +53,8 @@ class Pool
         if (!isset($key[1]) && strlen($key) < 1) {
             throw new InvalidArgumentException("Invalid Argument!");
         }
-        $item= new Item ($this->redisCache,$key);
-        $item->set($this->redisCache->get($key));
+        $item= new Item ($this->redisRepository,$key);
+        $item->set($this->redisRepository->get($key));
         return $item;
     }
 
@@ -81,8 +81,8 @@ class Pool
             if (!isset($key[1]) && strlen($key) < 1) {
                 throw new InvalidArgumentException("Invalid Argument!");
             }
-            $item= new item ($this->redisCache,$key);
-            $item->set($this->redisCache->get($key));
+            $item= new item ($this->redisRepository,$key);
+            $item->set($this->redisRepository->get($key));
             $items[] = $item;
         }
         return $items;
@@ -110,7 +110,8 @@ class Pool
         if (!isset($key[1]) && strlen($key) < 1) {
             throw new InvalidArgumentException("Invalid Argument!");
         }
-        return $this->redisCache->has($key);
+        $item=new Item($this->redisRepository,$key);
+        return $item->isHit();
     }
 
     /**
@@ -121,7 +122,7 @@ class Pool
      */
     public function clear()
     {
-        return $this->redisCache->clearAll();
+        return $this->redisRepository->clearAll();
     }
 
     /**
@@ -139,7 +140,7 @@ class Pool
      */
     public function deleteItem($key)
     {
-        return $this->redisCache->del($key);
+        return $this->redisRepository->del($key);
     }
 
     /**
@@ -158,7 +159,7 @@ class Pool
     public function deleteItems(array $keys)
     {
         foreach ($keys as $key){
-            $this->redisCache->del($key);
+            $this->redisRepository->del($key);
         }
 
     }

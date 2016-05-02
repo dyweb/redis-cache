@@ -2,7 +2,7 @@
 
 namespace tests\Psr6;
 
-use Dy\Cache\RedisCache;
+use Dy\Cache\RedisRepository;
 use Dy\Cache\Item;
 use Dy\Cache\Pool;
 use PHPUnit_Framework_TestCase;
@@ -20,7 +20,7 @@ final class PsrTest extends PHPUnit_Framework_TestCase
      * Test RedisCache
      * @var RedisCache
      */
-    protected $redisCache;
+    protected $redisRepository;
     /**
      * Test pool
      * @var Pool
@@ -55,13 +55,13 @@ final class PsrTest extends PHPUnit_Framework_TestCase
             'memory_cache' => false
         );
 
-        $this->redisCache=new RedisCache();
-        $this->pool=new Pool($this->redisCache);
+        $this->redisRepository=new RedisRepository($this->config);
+        $this->pool=new Pool($this->redisRepository);
 
-        $this->item=new Item($this->redisCache,"test");
-        $this->item2=new Item($this->redisCache,"test2");
-        $this->item3=new Item($this->redisCache,"test3");
-        $this->item4=new Item($this->redisCache,"nullkey");
+        $this->item=new Item($this->redisRepository,"test");
+        $this->item2=new Item($this->redisRepository,"test2");
+        $this->item3=new Item($this->redisRepository,"test3");
+        $this->item4=new Item($this->redisRepository,"nullkey");
     }
 
 
@@ -74,7 +74,6 @@ final class PsrTest extends PHPUnit_Framework_TestCase
         $this->item2->expiresAfter(10);
         $this->item3->set('abc');
         $this->item3->expiresAfter(10);
-
 
     }
 
@@ -95,15 +94,12 @@ final class PsrTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->item4->get());
     }
 
-    public function testGetDefault()
+    public function testHasItem()
     {
-        $this->assertEquals('abc', RedisCache::get('test3', 1));
-        $this->assertEquals(888, RedisCache::get('nullkey', 888));
-        $this->assertEquals('888', RedisCache::get('nullkey2', '888'));
-        $this->assertEquals('a', RedisCache::get('nullkey3', function () {
-            static $i = '';
-            return $i .= 'a';
-        }));
+        $this->assertFalse($this->pool->hasItem("test1"));
+        $this->assertTrue($this->pool->hasItem("test2"));
+        $this->assertTrue($this->pool->hasItem("test3"));
+        $this->assertFalse($this->pool->hasItem("nullkey"));
     }
 
 }

@@ -14,9 +14,9 @@ class Item
     /**
      * A RedisRepository instance this Item used.
      *
-     * @var RedisCache
+     * @var RedisRepository
      */
-    protected $redisCache;
+    protected $redisRepository;
 
     /**
      * Cache Item key name.
@@ -44,13 +44,13 @@ class Item
     /**
      * Constructor.
      *
-     * @param RedisCache, a RedisRepository instance
+     * @param RedisRepository, a RedisRepository instance
      * @param string, Cache Item key name
      * @param int, Cache Item expire time
      */
-    public function __construct($redisCache, $key, $minute=10000)
+    public function __construct($redisRepository, $key, $minute=10000)
     {
-        $this->redisCache = $redisCache;
+        $this->redisRepository = $redisRepository;
         $this->key = $key;
         $this->minute = $minute;
     }
@@ -84,7 +84,7 @@ class Item
      */
     public function get()
     {
-        return $this->value;
+        return $this->redisRepository->get($this->key);
     }
 
     /**
@@ -96,7 +96,11 @@ class Item
      * @return bool
      *   True if the request resulted in a cache hit. False otherwise.
      */
-    public function isHit(){}
+    public function isHit()
+    {
+        return $this->redisRepository->has($this->key);
+    }
+
 
     /**
      * Sets the value represented by this cache item.
@@ -117,7 +121,7 @@ class Item
             return false;
         }
         $this->value = $value;
-        $this->redisCache->put($this->key,$this->value,$this->minute);
+        $this->redisRepository->put($this->key,$this->value,$this->minute);
         return $this;
     }
 
@@ -141,7 +145,7 @@ class Item
         {
             $this->value=0;
         }
-        $this->redisCache->put($this->key,$this->value,$this->minute);
+        $this->redisRepository->put($this->key,$this->value,$this->minute);
         $this->value=null;
         return $this;
     }
@@ -161,12 +165,12 @@ class Item
      */
     public function expiresAfter($time)
     {
-        $this->minute = $time/60;
+        $this->minute = $time;
         if(!isset($this->value))
         {
             $this->value=0;
         }
-        $this->redisCache->put($this->key,$this->value,$this->minute);
+        $this->redisRepository->put($this->key,$this->value,$this->minute);
         $this->value=null;
         return $this;
     }
@@ -179,7 +183,7 @@ class Item
      */
     public function save()
     {
-        return $this->redisCache->put($this->key,$this->value,$this->minute);
+        return $this->redisRepository->put($this->key,$this->value,$this->minute);
     }
 
 }
