@@ -141,8 +141,7 @@ class Item
     {
         $date = new \DateTime();
         $this->minute = ($expiration-$date)/60;
-        if (!isset($this->value)) 
-        {
+        if (!isset($this->value)) {
             $this->value=0;
         }
         $this->redisRepository->put($this->key, $this->value, $this->minute);
@@ -166,8 +165,7 @@ class Item
     public function expiresAfter($time)
     {
         $this->minute = $time;
-        if (!isset($this->value))
-        {
+        if (!isset($this->value)) {
             $this->value=0;
         }
         $this->redisRepository->put($this->key, $this->value, $this->minute);
