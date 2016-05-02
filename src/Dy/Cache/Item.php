@@ -48,7 +48,7 @@ class Item
      * @param string, Cache Item key name
      * @param int, Cache Item expire time
      */
-    public function __construct($redisRepository, $key, $minute=10000)
+    public function __construct($redisRepository, $key, $minute = 10000)
     {
         $this->redisRepository = $redisRepository;
         $this->key = $key;
@@ -121,7 +121,7 @@ class Item
             return false;
         }
         $this->value = $value;
-        $this->redisRepository->put($this->key,$this->value,$this->minute);
+        $this->redisRepository->put($this->key, $this->value, $this->minute);
         return $this;
     }
 
@@ -141,11 +141,11 @@ class Item
     {
         $date = new \DateTime();
         $this->minute = ($expiration-$date)/60;
-        if(!isset($this->value))
+        if (!isset($this->value) )
         {
             $this->value=0;
         }
-        $this->redisRepository->put($this->key,$this->value,$this->minute);
+        $this->redisRepository->put($this->key, $this->value, $this->minute);
         $this->value=null;
         return $this;
     }
@@ -166,11 +166,11 @@ class Item
     public function expiresAfter($time)
     {
         $this->minute = $time;
-        if(!isset($this->value))
+        if (!isset($this->value) )
         {
             $this->value=0;
         }
-        $this->redisRepository->put($this->key,$this->value,$this->minute);
+        $this->redisRepository->put($this->key, $this->value, $this->minute);
         $this->value=null;
         return $this;
     }
@@ -183,7 +183,6 @@ class Item
      */
     public function save()
     {
-        return $this->redisRepository->put($this->key,$this->value,$this->minute);
+        return $this->redisRepository->put($this->key, $this->value, $this->minute);
     }
-
 }

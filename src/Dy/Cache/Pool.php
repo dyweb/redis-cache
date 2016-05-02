@@ -53,7 +53,7 @@ class Pool
         if (!isset($key[1]) && strlen($key) < 1) {
             throw new InvalidArgumentException("Invalid Argument!");
         }
-        $item= new Item ($this->redisRepository,$key);
+        $item= new Item ($this->redisRepository, $key);
         $item->set($this->redisRepository->get($key));
         return $item;
     }
@@ -81,7 +81,7 @@ class Pool
             if (!isset($key[1]) && strlen($key) < 1) {
                 throw new InvalidArgumentException("Invalid Argument!");
             }
-            $item= new item ($this->redisRepository,$key);
+            $item= new item ($this->redisRepository, $key);
             $item->set($this->redisRepository->get($key));
             $items[] = $item;
         }
@@ -110,7 +110,7 @@ class Pool
         if (!isset($key[1]) && strlen($key) < 1) {
             throw new InvalidArgumentException("Invalid Argument!");
         }
-        $item=new Item($this->redisRepository,$key);
+        $item=new Item($this->redisRepository, $key);
         return $item->isHit();
     }
 
@@ -158,7 +158,8 @@ class Pool
      */
     public function deleteItems(array $keys)
     {
-        foreach ($keys as $key){
+        foreach ($keys as $key)
+        {
             $this->redisRepository->del($key);
         }
 
