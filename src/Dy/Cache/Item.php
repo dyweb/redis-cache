@@ -1,19 +1,58 @@
 <?php
 
+/**
+ * Created by PhpStorm.
+ * User: bluemit
+ * Date: 16-4-20
+ * Time: 下午2:53
+ */
+
 namespace Dy\Cache;
 
 class Item
 {
+    /**
+     * A RedisRepository instance this Item used.
+     *
+     * @var RedisCache
+     */
     protected $redisCache;
+
+    /**
+     * Cache Item key name.
+     *
+     * @var string
+     */
     protected $key;
+
+    /**
+     * Cache Item value.
+     *
+     * @var mixed
+     */
     protected $value;
+
+    /**
+     * Cache Item expire time.
+     *
+     * @var int
+     */
     protected $minute;
 
-    public function __construct($redisCache,$key,$minute=10000)
+
+
+    /**
+     * Constructor.
+     *
+     * @param RedisCache, a RedisRepository instance
+     * @param string, Cache Item key name
+     * @param int, Cache Item expire time
+     */
+    public function __construct($redisCache, $key, $minute=10000)
     {
-        $this->redisCache=$redisCache;
-        $this->key=$key;
-        $this->minute=$minute;
+        $this->redisCache = $redisCache;
+        $this->key = $key;
+        $this->minute = $minute;
     }
 
 
@@ -23,7 +62,7 @@ class Item
      * The key is loaded by the Implementing Library, but should be available to
      * the higher level callers when needed.
      *
-     * @return string
+     * @return string|false
      *   The key string for this cache item.
      */
     public function getKey()
@@ -78,8 +117,8 @@ class Item
             return false;
         }
         $this->value = $value;
-        RedisCache::put($this->key,$this->value,$this->minute);
-        return true;
+        $this->redisCache->put($this->key,$this->value,$this->minute);
+        return $this;
     }
 
     /**
@@ -98,7 +137,12 @@ class Item
     {
         $date = new \DateTime();
         $this->minute = ($expiration-$date)/60;
+        if(!isset($this->value))
+        {
+            $this->value=0;
+        }
         $this->redisCache->put($this->key,$this->value,$this->minute);
+        $this->value=null;
         return $this;
     }
 
@@ -118,10 +162,21 @@ class Item
     public function expiresAfter($time)
     {
         $this->minute = $time/60;
+        if(!isset($this->value))
+        {
+            $this->value=0;
+        }
         $this->redisCache->put($this->key,$this->value,$this->minute);
+        $this->value=null;
+        return $this;
     }
 
-
+    /**
+     * Save the Item to the database;
+     *
+     * @return static
+     *   The called object.
+     */
     public function save()
     {
         return $this->redisCache->put($this->key,$this->value,$this->minute);

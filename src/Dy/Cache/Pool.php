@@ -8,23 +8,27 @@
 namespace Dy\Cache;
 
 use Psr\Cache\CacheItemInterface;
-use Psr\Cache\InvalidArgumentException;
 
 /**
  * CacheItemPoolInterface generates CacheItemInterface objects.
  */
 class Pool
 {
-
-    public $redisCache;
+    /**
+     * A RedisRepository instance this Item used.
+     *
+     * @var RedisCache
+     */
+    protected $redisCache;
 
 
     /**
      * Constructor.
+     * @param RedisCache
      */
-    public function __construct()
+    public function __construct($redisCache)
     {
-        $this->redisCache=new RedisCache();
+        $this->redisCache=$redisCache;
     }
 
 
@@ -46,7 +50,10 @@ class Pool
      */
     public function getItem($key)
     {
-        $item= new item ($this->redisCache,$key);
+        if (!isset($key[1]) && strlen($key) < 1) {
+            throw new InvalidArgumentException("Invalid Argument!");
+        }
+        $item= new Item ($this->redisCache,$key);
         $item->set($this->redisCache->get($key));
         return $item;
     }
@@ -70,11 +77,13 @@ class Pool
     public function getItems(array $keys = array())
     {
         $items=[];
-        foreach ($keys as $key)
-        {
+        foreach ($keys as $key) {
+            if (!isset($key[1]) && strlen($key) < 1) {
+                throw new InvalidArgumentException("Invalid Argument!");
+            }
             $item= new item ($this->redisCache,$key);
             $item->set($this->redisCache->get($key));
-            array_push($items,$item);
+            $items[] = $item;
         }
         return $items;
     }
@@ -98,6 +107,9 @@ class Pool
      */
     public function hasItem($key)
     {
+        if (!isset($key[1]) && strlen($key) < 1) {
+            throw new InvalidArgumentException("Invalid Argument!");
+        }
         return $this->redisCache->has($key);
     }
 
@@ -145,8 +157,7 @@ class Pool
      */
     public function deleteItems(array $keys)
     {
-        foreach ($keys as $key)
-        {
+        foreach ($keys as $key){
             $this->redisCache->del($key);
         }
 

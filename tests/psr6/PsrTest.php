@@ -16,8 +16,21 @@ final class PsrTest extends PHPUnit_Framework_TestCase
 
     protected $client = null;
 
+    /**
+     * Test RedisCache
+     * @var RedisCache
+     */
+    protected $redisCache;
+    /**
+     * Test pool
+     * @var Pool
+     */
     protected $pool;
 
+    /**
+     * Test items
+     * @var Item
+     */
     protected $item;
     protected $item2;
     protected $item3;
@@ -42,12 +55,13 @@ final class PsrTest extends PHPUnit_Framework_TestCase
             'memory_cache' => false
         );
 
-        $pool=new Pool();
+        $this->redisCache=new RedisCache();
+        $this->pool=new Pool($this->redisCache);
 
-        $this->item=new Item($pool->redisCache,"test");
-        $this->item2=new Item($pool->redisCache,"test2");
-        $this->item3=new Item($pool->redisCache,"test3");
-        $this->item4=new Item($pool->redisCache,"nullkey");
+        $this->item=new Item($this->redisCache,"test");
+        $this->item2=new Item($this->redisCache,"test2");
+        $this->item3=new Item($this->redisCache,"test3");
+        $this->item4=new Item($this->redisCache,"nullkey");
     }
 
 
