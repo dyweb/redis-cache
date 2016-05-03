@@ -57,7 +57,6 @@ final class PsrTest extends PHPUnit_Framework_TestCase
 
         $this->redisRepository=new RedisRepository($this->config);
         $this->pool=new Pool($this->redisRepository);
-
         $this->item=new Item($this->redisRepository,"test");
         $this->item2=new Item($this->redisRepository,"test2");
         $this->item3=new Item($this->redisRepository,"test3");
@@ -67,14 +66,12 @@ final class PsrTest extends PHPUnit_Framework_TestCase
 
     public function testPut()
     {
-
         $this->item->set('aaa');
         $this->item->expiresAfter(1/60);
         $this->item2->set('123');
         $this->item2->expiresAfter(10);
         $this->item3->set('abc');
         $this->item3->expiresAfter(10);
-
     }
 
     public function testGetKey()
@@ -100,6 +97,29 @@ final class PsrTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->pool->hasItem("test2"));
         $this->assertTrue($this->pool->hasItem("test3"));
         $this->assertFalse($this->pool->hasItem("nullkey"));
+    }
+
+    public function testDeleteItem()
+    {
+        $this->pool->deleteItem("test2");
+        $this->pool->deleteItem("test3");
+        $this->assertFalse($this->pool->hasItem("test2"));
+        $this->assertFalse($this->pool->hasItem("test3"));
+    }
+
+    public function testDeleteItems()
+    {
+        $this->item2=new Item($this->redisRepository,"test2");
+        $this->item3=new Item($this->redisRepository,"test3");
+        $this->item2->set('123');
+        $this->item2->expiresAfter(10);
+        $this->item3->set('abc');
+        $this->item3->expiresAfter(10);
+        $this->assertTrue($this->pool->hasItem("test2"));
+        $this->assertTrue($this->pool->hasItem("test3"));
+        $this->pool->deleteItems(["test2","test3"]);
+        $this->assertFalse($this->pool->hasItem("test2"));
+        $this->assertFalse($this->pool->hasItem("test3"));
     }
 
 }
