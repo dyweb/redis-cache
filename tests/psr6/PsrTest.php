@@ -122,4 +122,18 @@ final class PsrTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->pool->hasItem("test3"));
     }
 
+    public function testClear()
+    {
+        $this->item->set('aaa');
+        $this->item->expiresAfter(1);
+        $this->item2->set('123');
+        $this->item2->expiresAfter(10);
+        $this->item3->set('abc');
+        $this->item3->expiresAfter(10);
+        $this->pool->clear();
+        $this->assertFalse($this->pool->hasItem("test"));
+        $this->assertFalse($this->pool->hasItem("test2"));
+        $this->assertFalse($this->pool->hasItem("test3"));
+    }
+
 }
