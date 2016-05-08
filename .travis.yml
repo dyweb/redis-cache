@@ -2,6 +2,10 @@ language: php
 
 matrix:
   include:
+    - php: 5.3
+      env: PHP_VER=5
+    - php: 5.4
+      env: PHP_VER=5
     - php: 5.5
       env: PHP_VER=5
     - php: 5.6
@@ -14,9 +18,7 @@ matrix:
       env: PHP_VER=7
   allow_failures:
     - php: 5.3
-      env: PHP_VER=5
     - php: 5.4
-      env: PHP_VER=5
     - php: nightly
 
 install:
