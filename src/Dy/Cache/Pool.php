@@ -8,11 +8,12 @@
 namespace Dy\Cache;
 
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * CacheItemPoolInterface generates CacheItemInterface objects.
  */
-class Pool
+class Pool implements \ItemPoolInterface
 {
     /**
      * A RedisRepository instance this Item used.
@@ -45,7 +46,7 @@ class Pool
      *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
      *   MUST be thrown.
      *
-     * @return CacheItemInterface
+     * @return Item
      *   The corresponding Cache Item.
      */
     public function getItem($key)

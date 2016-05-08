@@ -9,7 +9,9 @@
 
 namespace Dy\Cache;
 
-class Item
+use Psr\Cache\CacheItemInterface;
+
+class Item implements \ItemInterface
 {
     /**
      * A RedisRepository instance this Item used.

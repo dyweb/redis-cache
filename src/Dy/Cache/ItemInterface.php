@@ -1,12 +1,13 @@
 <?php
-
-namespace Dy\Cache;
-
-use \Psr\Cache\CacheItemInterface;
-
 /**
- * CacheItemInterface defines an interface for interacting with objects inside a cache.
- */
+ * Created by PhpStorm.
+ * User: bluemit
+ * Date: 16-5-8
+ * Time: 下午2:09
+ **/
+
+use Psr\Cache\CacheItemInterface;
+
 interface ItemInterface extends CacheItemInterface
 {
     /**
@@ -88,4 +89,12 @@ interface ItemInterface extends CacheItemInterface
      *   The called object.
      */
     public function expiresAfter($time);
+
+    /**
+     * Save the Item to the database;
+     *
+     * @return static
+     *   The called object.
+     */
+    public function save();
 }

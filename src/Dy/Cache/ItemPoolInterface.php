@@ -1,14 +1,12 @@
 <?php
-
-namespace Dy\Cache;
-
-use \Psr\Cache\CacheItemPoolInterface;
-use \Psr\Cache\CacheItemInterface;
-
 /**
- * CacheItemPoolInterface generates CacheItemInterface objects.
+ * Created by PhpStorm.
+ * User: bluemit
+ * Date: 16-5-8
+ * Time: 下午2:14
  */
-interface PoolInterface extends CacheItemPoolInterface
+use Psr\Cache\CacheItemInterface;
+interface ItemPoolInterface extends \Psr\Cache\CacheItemPoolInterface
 {
     /**
      * Returns a Cache Item representing the specified key.
