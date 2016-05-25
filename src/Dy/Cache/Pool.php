@@ -7,13 +7,14 @@
  */
 namespace Dy\Cache;
 
+use Dy\Cache\Item;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * CacheItemPoolInterface generates CacheItemInterface objects.
  */
-class Pool implements \ItemPoolInterface
+class Pool implements CacheItemPoolInterface
 {
     /**
      * A RedisRepository instance this Item used.
