@@ -169,13 +169,13 @@ class Pool implements CacheItemPoolInterface
     /**
      * Persists a cache item immediately.
      *
-     * @param Item $item
+     * @param CacheItemInterface $item
      *   The cache item to save.
      *
      * @return bool
      *   True if the item was successfully persisted. False if there was an error.
      */
-    public function save(Item $item)
+    public function save(CacheItemInterface $item)
     {
         return $item->save();
     }
@@ -183,13 +183,13 @@ class Pool implements CacheItemPoolInterface
     /**
      * Sets a cache item to be persisted later.
      *
-     * @param Item $item
+     * @param CacheItemInterface $item
      *   The cache item to save.
      *
      * @return bool
      *   False if the item could not be queued or if a commit was attempted and failed. True otherwise.
      */
-    public function saveDeferred(Item $item)
+    public function saveDeferred(CacheItemInterface $item)
     {
         return $this->save($item);
     }
