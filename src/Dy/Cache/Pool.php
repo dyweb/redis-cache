@@ -30,7 +30,7 @@ class Pool implements CacheItemPoolInterface
      */
     public function __construct($redisRepository)
     {
-        $this->redisRepository=$redisRepository;
+        $this->redisRepository = $redisRepository;
     }
 
 
@@ -55,7 +55,7 @@ class Pool implements CacheItemPoolInterface
         if (!isset($key[1]) && strlen($key) < 1) {
             throw new InvalidArgumentException("Invalid Argument!");
         }
-        $item= new Item($this->redisRepository, $key);
+        $item = new Item($this->redisRepository, $key);
         $item->set($this->redisRepository->get($key));
         return $item;
     }
@@ -78,12 +78,12 @@ class Pool implements CacheItemPoolInterface
      */
     public function getItems(array $keys = array())
     {
-        $items=[];
+        $items = array();
         foreach ($keys as $key) {
             if (!isset($key[1]) && strlen($key) < 1) {
                 throw new InvalidArgumentException("Invalid Argument!");
             }
-            $item= new item($this->redisRepository, $key);
+            $item = new item($this->redisRepository, $key);
             $item->set($this->redisRepository->get($key));
             $items[] = $item;
         }
@@ -112,7 +112,7 @@ class Pool implements CacheItemPoolInterface
         if (!isset($key[1]) && strlen($key) < 1) {
             throw new InvalidArgumentException("Invalid Argument!");
         }
-        $item=new Item($this->redisRepository, $key);
+        $item =new Item($this->redisRepository, $key);
         return $item->isHit();
     }
 
