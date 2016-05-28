@@ -86,6 +86,7 @@ final class RedisRepository
     public function __destruct()
     {
         $this->clearNamespace();
+        $this->closeClient();
     }
 
     /**
@@ -402,6 +403,18 @@ final class RedisRepository
             throw new \RuntimeException('Unsupported client type');
         }
         return new $className($config);
+    }
+
+    /**
+     * Close the client conenction.
+     */
+    protected function closeClient()
+    {
+        if ($this->client == null) {
+            return;
+        }
+        $this->client->quit();
+        $this->client = null;
     }
 
     /**

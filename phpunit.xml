@@ -8,14 +8,22 @@
             <file>./tests/predis/PredisTestNoSet.php</file>
         </testsuite>
         <testsuite name="php-redis">
-            <file phpVersion="7.0.0" phpVersionOperator="&lt;">./tests/phpredis/RedisTestSet.php</file>
+            <file>./tests/phpredis/RedisTestSet.php</file>
         </testsuite>
         <testsuite name="php-redis-noset">
-            <file phpVersion="7.0.0" phpVersionOperator="&lt;">./tests/phpredis/RedisTestNoSet.php</file>
+            <file>./tests/phpredis/RedisTestNoSet.php</file>
         </testsuite>
 
+        <testsuite name="facade">
+            <file>./tests/facade/FacadeTest.php</file>
+        </testsuite>
         <testsuite name="psr6">
             <file>./tests/psr6/PsrTest.php</file>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>

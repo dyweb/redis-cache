@@ -171,6 +171,7 @@ final class RedisNamespace
                 $deletedKeys[] = $key;
             }
         }
+        //var_dump($this->keyRecords);
 
         // only Redis 2.4+ supported
         if (count($addedKeys) > 0) {

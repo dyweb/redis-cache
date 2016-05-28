@@ -6,13 +6,15 @@
  * Time: 21:32
  */
 
-use Dy\Cache\RedisCache;
+use Dy\Cache\RedisRepository;
 
 final class RedisTestNoSet extends PHPUnit_Framework_TestCase
 {
-    protected $prefix = 'dy:cache:test';
+    protected $prefix = 'dy:cache:test:noset';
 
     protected $config = null;
+
+    protected $cache = null;
 
     public function __construct()
     {
@@ -31,31 +33,31 @@ final class RedisTestNoSet extends PHPUnit_Framework_TestCase
             ),
             'memory_cache' => false
         );
-        RedisCache::config($this->config);
+        $this->cache = new RedisRepository($this->config);
     }
 
     public function testPut()
     {
-        RedisCache::put('test', 'aaa', 1/60);
-        RedisCache::put('test2', '123', 1);
-        RedisCache::set('test3', 'abc', 10);
+        $this->cache->put('test', 'aaa', 1/60);
+        $this->cache->put('test2', '123', 1);
+        $this->cache->set('test3', 'abc', 10);
     }
 
     public function testGet()
     {
         sleep(2);
-        $this->assertEquals(null, RedisCache::get('test'));
-        $this->assertEquals(123, RedisCache::get('test2'));
-        $this->assertEquals('abc', RedisCache::get('test3'));
-        $this->assertEquals(null, RedisCache::get('nullkey'));
+        $this->assertEquals(null, $this->cache->get('test'));
+        $this->assertEquals(123, $this->cache->get('test2'));
+        $this->assertEquals('abc', $this->cache->get('test3'));
+        $this->assertEquals(null, $this->cache->get('nullkey'));
     }
 
     public function testGetDefault()
     {
-        $this->assertEquals('abc', RedisCache::get('test3', 1));
-        $this->assertEquals(888, RedisCache::get('nullkey', 888));
-        $this->assertEquals('888', RedisCache::get('nullkey2', '888'));
-        $this->assertEquals('a', RedisCache::get('nullkey3', function () {
+        $this->assertEquals('abc', $this->cache->get('test3', 1));
+        $this->assertEquals(888, $this->cache->get('nullkey', 888));
+        $this->assertEquals('888', $this->cache->get('nullkey2', '888'));
+        $this->assertEquals('a', $this->cache->get('nullkey3', function () {
             static $i = '';
             return $i .= 'a';
         }));
@@ -63,47 +65,47 @@ final class RedisTestNoSet extends PHPUnit_Framework_TestCase
 
     public function testHas()
     {
-        $this->assertTrue(RedisCache::has('test2'));
-        $this->assertFalse(RedisCache::has('nullkey'));
-        $this->assertFalse(RedisCache::has('hastest'));
+        $this->assertTrue($this->cache->has('test2'));
+        $this->assertFalse($this->cache->has('nullkey'));
+        $this->assertFalse($this->cache->has('hastest'));
     }
 
     public function testPull()
     {
-        $this->assertEquals('abc', RedisCache::pull('test3'));
-        $this->assertNull(RedisCache::pull('test3'));
-        $this->assertNull(RedisCache::pull('pulltest'));
+        $this->assertEquals('abc', $this->cache->pull('test3'));
+        $this->assertNull($this->cache->pull('test3'));
+        $this->assertNull($this->cache->pull('pulltest'));
     }
 
     public function testForever()
     {
-        RedisCache::set('foreverkey', 'leave you', 1/60);
-        $this->assertEquals('leave you', RedisCache::get('foreverkey'));
-        RedisCache::forever('foreverkey', 'love you');
+        $this->cache->set('foreverkey', 'leave you', 1/60);
+        $this->assertEquals('leave you', $this->cache->get('foreverkey'));
+        $this->cache->forever('foreverkey', 'love you');
         sleep(2);
-        $this->assertEquals('love you', RedisCache::get('foreverkey'));
+        $this->assertEquals('love you', $this->cache->get('foreverkey'));
     }
 
     public function testDel()
     {
-        RedisCache::set('deltest', 'abc', 1);
-        $this->assertTrue(RedisCache::del('test2'));
-        $this->assertTrue(RedisCache::del('deltest'));
-        $this->assertFalse(RedisCache::del('delnullkey'));
+        $this->cache->set('deltest', 'abc', 1);
+        $this->assertTrue($this->cache->del('test2'));
+        $this->assertTrue($this->cache->del('deltest'));
+        $this->assertFalse($this->cache->del('delnullkey'));
     }
 
     public function testForget()
     {
-        RedisCache::set('forgettest', 'abc', 1);
-        $this->assertFalse(RedisCache::forget('delnullkey'));
-        $this->assertTrue(RedisCache::forget('forgettest'));
+        $this->cache->set('forgettest', 'abc', 1);
+        $this->assertFalse($this->cache->forget('delnullkey'));
+        $this->assertTrue($this->cache->forget('forgettest'));
     }
 
     public function testIncrement()
     {
-        $this->assertEquals(1, RedisCache::increment('incr_test'));
-        $this->assertEquals(3, RedisCache::increment('incr_test', 2));
-        $this->assertEquals(2, RedisCache::increment('incr2_test', 2));
+        $this->assertEquals(1, $this->cache->increment('incr_test'));
+        $this->assertEquals(3, $this->cache->increment('incr_test', 2));
+        $this->assertEquals(2, $this->cache->increment('incr2_test', 2));
     }
 
     /**
@@ -111,15 +113,15 @@ final class RedisTestNoSet extends PHPUnit_Framework_TestCase
      */
     public function testIncrementFailed()
     {
-        RedisCache::set('incrtest', 'abc', 2);
-        RedisCache::increment('incrtest', 2);
+        $this->cache->set('incrtest', 'abc', 2);
+        $this->cache->increment('incrtest', 2);
     }
 
     public function testDecrement()
     {
-        $this->assertEquals(-1, RedisCache::decrement('decr_test'));
-        $this->assertEquals(-3, RedisCache::decrement('decr_test', 2));
-        $this->assertEquals(-2, RedisCache::decrement('decr2_test', 2));
+        $this->assertEquals(-1, $this->cache->decrement('decr_test'));
+        $this->assertEquals(-3, $this->cache->decrement('decr_test', 2));
+        $this->assertEquals(-2, $this->cache->decrement('decr2_test', 2));
     }
 
     /**
@@ -127,19 +129,19 @@ final class RedisTestNoSet extends PHPUnit_Framework_TestCase
      */
     public function testDecrementFailed()
     {
-        RedisCache::set('decrtest', 'abc', 2);
-        RedisCache::decrement('decrtest', 2);
+        $this->cache->set('decrtest', 'abc', 2);
+        $this->cache->decrement('decrtest', 2);
     }
 
     public function testFluentInterface()
     {
-        $this->assertEquals('yes', RedisCache::put('fluent', 'yes', 1)->get('fluent'));
-        $this->assertEquals('yes', RedisCache::forever('fluent2', 'yes')->get('fluent2'));
+        $this->assertEquals('yes', $this->cache->put('fluent', 'yes', 1)->get('fluent'));
+        $this->assertEquals('yes', $this->cache->forever('fluent2', 'yes')->get('fluent2'));
     }
 
     public function testGetAll()
     {
-        $keys = RedisCache::getAllKeys();
+        $keys = $this->cache->getAllKeys();
         $this->assertContains($this->prefix . ':incr_test', $keys);
         $this->assertContains($this->prefix . ':incr2_test', $keys);
         $this->assertContains($this->prefix . ':decr_test', $keys);
@@ -149,13 +151,13 @@ final class RedisTestNoSet extends PHPUnit_Framework_TestCase
 
     public function testClearAll()
     {
-        $keys = RedisCache::clearAll()->getAllKeys();
+        $keys = $this->cache->clearAll()->getAllKeys();
         $this->assertEmpty($keys);
     }
 
     public function testKeysByNamespace()
     {
-        $client = RedisCache::client();
+        $client = $this->cache->client();
         $client->set('dy:other:test:haha', 'haha');
         $client->set('dy:other:test:pipi', 'hhhh');
         if (!empty($this->config['namespace']['key_set_name'])) {
@@ -164,17 +166,17 @@ final class RedisTestNoSet extends PHPUnit_Framework_TestCase
             ));
         }
 
-        RedisCache::set('myspace', true, 1);
-        $keys = RedisCache::keysByNamespace('dy:other:test');
+        $this->cache->set('myspace', true, 1);
+        $keys = $this->cache->keysByNamespace('dy:other:test');
         $this->assertContains('dy:other:test:haha', $keys);
         $this->assertContains('dy:other:test:pipi', $keys);
 
-        $this->assertTrue(RedisCache::has('myspace'));
+        $this->assertTrue($this->cache->has('myspace'));
     }
 
     public function testDelByNamespace()
     {
-        $client = RedisCache::client();
+        $client = $this->cache->client();
         $client->set('dy:other2:test:haha', 'haha');
         $client->set('dy:other2:test:pipi', 'hhhh');
         if (!empty($this->config['namespace']['key_set_name'])) {
@@ -183,61 +185,61 @@ final class RedisTestNoSet extends PHPUnit_Framework_TestCase
             ));
         }
 
-        RedisCache::set('myspace2', true, 1);
-        $this->assertEquals(0, count(RedisCache::delByNamespace('dy:other2:test')->keysByNamespace('dy:other2:test')));
+        $this->cache->set('myspace2', true, 1);
+        $this->assertEquals(0, count($this->cache->delByNamespace('dy:other2:test')->keysByNamespace('dy:other2:test')));
 
-        $this->assertTrue(RedisCache::has('myspace2'));
+        $this->assertTrue($this->cache->has('myspace2'));
     }
 
     public function testSetNamespace()
     {
-        $this->assertEquals(123, RedisCache::setNamespace('dy:space')->set('test', 123, 1)->get('test'));
-        $this->assertFalse(RedisCache::del('myspace'));
-        $this->assertEquals(true, unserialize(RedisCache::client()->get($this->prefix . ':myspace')));
-        RedisCache::setNamespace($this->prefix);
-        $this->assertTrue(RedisCache::has('myspace2'));
+        $this->assertEquals(123, $this->cache->setNamespace('dy:space')->set('test', 123, 1)->get('test'));
+        $this->assertFalse($this->cache->del('myspace'));
+        $this->assertEquals(true, unserialize($this->cache->client()->get($this->prefix . ':myspace')));
+        $this->cache->setNamespace($this->prefix);
+        $this->assertTrue($this->cache->has('myspace2'));
     }
 
     public function testGetNamespace()
     {
-        $this->assertEquals($this->prefix, RedisCache::getNamespace());
+        $this->assertEquals($this->prefix, $this->cache->getNamespace());
     }
 
     public function testMemoryCache()
     {
-        RedisCache::enableMemoryCache();
-        RedisCache::put('mtest', 123, 1);
-        RedisCache::put('mtest2', '123', 1);
-        RedisCache::put('mtest3', 'test', 1);
+        $this->cache->enableMemoryCache();
+        $this->cache->put('mtest', 123, 1);
+        $this->cache->put('mtest2', '123', 1);
+        $this->cache->put('mtest3', 'test', 1);
 
-        $this->assertEquals(123, RedisCache::get('mtest'));
-        $this->assertEquals(123, RedisCache::get('mtest2'));
-        $this->assertEquals('test', RedisCache::get('mtest3'));
-        $this->assertEquals(null, RedisCache::get('mtest4'));
-        $this->assertEquals(null, RedisCache::get('mtest4'));
+        $this->assertEquals(123, $this->cache->get('mtest'));
+        $this->assertEquals(123, $this->cache->get('mtest2'));
+        $this->assertEquals('test', $this->cache->get('mtest3'));
+        $this->assertEquals(null, $this->cache->get('mtest4'));
+        $this->assertEquals(null, $this->cache->get('mtest4'));
 
         $i = '';
-        $this->assertTrue(RedisCache::del('mtest3'));
-        $this->assertEquals('a', RedisCache::get('mtest3', function () use (&$i) {
+        $this->assertTrue($this->cache->del('mtest3'));
+        $this->assertEquals('a', $this->cache->get('mtest3', function () use (&$i) {
             $i .= 'a';
             return $i;
         }));
-        $this->assertEquals('aa', RedisCache::get('mtest3', function () use (&$i) {
+        $this->assertEquals('aa', $this->cache->get('mtest3', function () use (&$i) {
             $i .= 'a';
             return $i;
         }));
 
-        $this->assertEquals(3, RedisCache::get('mtest4', 3));
-        $this->assertEquals(4, RedisCache::get('mtest4', 4));
-        RedisCache::put('mtest4', 5, 1);
-        $this->assertEquals(5, RedisCache::get('mtest4', 6));
+        $this->assertEquals(3, $this->cache->get('mtest4', 3));
+        $this->assertEquals(4, $this->cache->get('mtest4', 4));
+        $this->cache->put('mtest4', 5, 1);
+        $this->assertEquals(5, $this->cache->get('mtest4', 6));
 
-        $this->assertEquals(5, RedisCache::disableMemoryCache()->get('mtest4', 7));
+        $this->assertEquals(5, $this->cache->disableMemoryCache()->get('mtest4', 7));
     }
 
     public function testFinish()
     {
-        $client = RedisCache::client();
+        $client = $this->cache->client();
         $regexp = 'dy\:*';
         $cursor = 0;
         do {

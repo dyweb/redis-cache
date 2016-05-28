@@ -82,6 +82,14 @@ final class RedisCache extends SingletonFacade
     }
 
     /**
+     * Close the current connection.
+     */
+    public static function close()
+    {
+        static::$instance = null;
+    }
+
+    /**
      * Create a RedisRepository instance.
      *
      * @return RedisRepository

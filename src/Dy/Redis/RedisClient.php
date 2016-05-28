@@ -8,7 +8,7 @@
 
 namespace Dy\Redis;
 
-use Redis as Client;
+use \Redis as Client;
 
 /**
  * Class RedisClient

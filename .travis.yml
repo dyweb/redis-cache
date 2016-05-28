@@ -24,7 +24,7 @@ install:
   - composer install --no-interaction --prefer-dist
 
 before_script:
-  - phpenv config-add phpconfig.ini
+  - if [ $PHP_VER != "hhvm" ]; then echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
 
 script:
   - phpunit --coverage-clover=coverage.xml
