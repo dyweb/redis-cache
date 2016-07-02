@@ -19,6 +19,7 @@ final class PsrTest extends PHPUnit_Framework_TestCase
      * @var RedisRepository
      */
     protected $redisRepository;
+
     /**
      * Test pool
      * @var Pool
@@ -33,7 +34,13 @@ final class PsrTest extends PHPUnit_Framework_TestCase
     protected $item2;
     protected $item3;
     protected $item4;
+    protected $items;
 
+    /**
+     * Test keys for items
+     * @var string
+     */
+    protected $keys;
 
     public function __construct()
     {
@@ -87,6 +94,26 @@ final class PsrTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(123, $this->item2->get());
         $this->assertEquals('abc', $this->item3->get());
         $this->assertEquals(null, $this->item4->get());
+    }
+
+    public function testGetItem()
+    {
+        $this->item2 = new Item($this->redisRepository,"test2");
+        $this->item2->set('123');
+        $this->item4=$this->pool->getItem("test2");
+        $this->assertEquals($this->item2, $this->item4);
+    }
+
+    public function testGetItems()
+    {
+        $this->item2 = new Item($this->redisRepository,"test2");
+        $this->item2->set('123');
+        $this->keys =array();
+        $this->keys[]='test2';
+        $this->items=$this->pool->getItems($this->keys);
+        foreach ($this->items as $item) {
+            $this->assertEquals($this->item2, $item);
+        }
     }
 
     public function testHasItem()
