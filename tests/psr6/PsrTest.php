@@ -16,7 +16,7 @@ final class PsrTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test RedisCache
-     * @var RedisCache
+     * @var RedisRepository
      */
     protected $redisRepository;
     /**
@@ -62,7 +62,7 @@ final class PsrTest extends PHPUnit_Framework_TestCase
     }
 
 
-    public function testPut()
+    public function testSet()
     {
         $this->item->set('aaa');
         $this->item->expiresAfter(1/60);
@@ -137,13 +137,36 @@ final class PsrTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->pool->hasItem("test3"));
     }
 
-    public function testSave()
+    public function testSaveForItem()
     {
         $this->item2 = new Item($this->redisRepository, "test2");
-        $this->item2->set('aaa');
+        $this->item2->set('bbb');
         $this->item2->expiresAfter(10);
         $this->item2->save();
-        $this->assertEquals('aaa',$this->item2->get());
+        $this->assertEquals('bbb',$this->item2->get());
+    }
+
+    public function testSaveForPool()
+    {
+        $this->item2 = new Item($this->redisRepository, "test2");
+        $this->item2->set('ccc');
+        $this->item2->expiresAfter(10);
+        $this->pool->save($this->item2);
+        $this->assertEquals('ccc',$this->item2->get());
+    }
+
+    public function testSaveDeferred()
+    {
+        $this->item2 = new Item($this->redisRepository, "test2");
+        $this->item2->set('ddd');
+        $this->item2->expiresAfter(10);
+        $this->pool->saveDeferred($this->item2);
+        $this->assertEquals('ddd',$this->item2->get());
+    }
+
+    public function testCommit()
+    {
+        $this->assertTrue($this->pool->commit());
     }
 
     public function testFinish()
