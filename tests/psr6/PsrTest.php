@@ -96,6 +96,14 @@ final class PsrTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->item4->get());
     }
 
+    public function testIsHit()
+    {
+        $this->assertFalse($this->item->isHit());
+        $this->assertTrue($this->item2->isHit());
+        $this->assertTrue($this->item3->isHit());
+        $this->assertFalse($this->item4->isHit());
+    }
+
     public function testGetItem()
     {
         $this->item2 = new Item($this->redisRepository,"test2");
