@@ -128,10 +128,22 @@ final class PsrTest extends PHPUnit_Framework_TestCase
         $this->item2->expiresAfter(10);
         $this->item3->set('abc');
         $this->item3->expiresAfter(10);
+        $this->assertTrue($this->pool->hasItem("test"));
+        $this->assertTrue($this->pool->hasItem("test2"));
+        $this->assertTrue($this->pool->hasItem("test3"));
         $this->pool->clear();
         $this->assertFalse($this->pool->hasItem("test"));
         $this->assertFalse($this->pool->hasItem("test2"));
         $this->assertFalse($this->pool->hasItem("test3"));
+    }
+
+    public function testSave()
+    {
+        $this->item2 = new Item($this->redisRepository, "test2");
+        $this->item2->set('aaa');
+        $this->item2->expiresAfter(10);
+        $this->item2->save();
+        $this->assertEquals('aaa',$this->item2->get());
     }
 
     public function testFinish()

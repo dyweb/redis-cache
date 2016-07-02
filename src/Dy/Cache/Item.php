@@ -171,7 +171,7 @@ class Item implements CacheItemInterface
             $this->value=0;
         }
         $this->redisRepository->put($this->key, $this->value, $this->minute);
-        $this->value=null;
+//        $this->value=null;
         return $this;
     }
 
