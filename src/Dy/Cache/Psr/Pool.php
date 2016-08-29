@@ -5,14 +5,19 @@
  * Date: 16-4-23
  * Time: 下午8:38
  */
-namespace Dy\Cache;
 
-use Dy\Cache\Item;
+namespace Dy\Cache\Psr;
+
+use Dy\Cache\Exception\InvalidArgumentException;
+use Dy\Cache\RedisRepository;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
+ * Class Pool
  * CacheItemPoolInterface generates CacheItemInterface objects.
+ *
+ * @package Dy\Cache
  */
 class Pool implements CacheItemPoolInterface
 {
@@ -21,8 +26,7 @@ class Pool implements CacheItemPoolInterface
      *
      * @var RedisRepository
      */
-    protected $redisRepository;
-
+    private $redisRepository;
 
     /**
      * Constructor.
@@ -33,6 +37,14 @@ class Pool implements CacheItemPoolInterface
         $this->redisRepository = $redisRepository;
     }
 
+    /**
+     * Get the redis repository bound to this pool.
+     * @return RedisRepository
+     */
+    public function getRepository()
+    {
+        return $this->redisRepository;
+    }
 
     /**
      * Returns a Cache Item representing the specified key.
@@ -52,11 +64,9 @@ class Pool implements CacheItemPoolInterface
      */
     public function getItem($key)
     {
-        if (!isset($key[1]) && strlen($key) < 1) {
-            throw new InvalidArgumentException("Invalid Argument!");
-        }
+        $this->checkKeyName($key);
+
         $item = new Item($this->redisRepository, $key);
-        $item->set($this->redisRepository->get($key));
         return $item;
     }
 
@@ -78,16 +88,15 @@ class Pool implements CacheItemPoolInterface
      */
     public function getItems(array $keys = array())
     {
-        $items = array();
         foreach ($keys as $key) {
-            if (!isset($key[1]) && strlen($key) < 1) {
-                throw new InvalidArgumentException("Invalid Argument!");
-            }
-            $item = new item($this->redisRepository, $key);
-            $item->set($this->redisRepository->get($key));
-            $items[] = $item;
+            $this->checkKeyName($key);
         }
-        return $items;
+
+        // $this in closure can only be used in PHP 5.4+
+        $repository = $this->getRepository();
+        return array_map(function ($key) use ($repository) {
+            return new Item($repository, $key);
+        }, $keys);
     }
 
     /**
@@ -109,10 +118,9 @@ class Pool implements CacheItemPoolInterface
      */
     public function hasItem($key)
     {
-        if (!isset($key[1]) && strlen($key) < 1) {
-            throw new InvalidArgumentException("Invalid Argument!");
-        }
-        $item =new Item($this->redisRepository, $key);
+        $this->checkKeyName($key);
+
+        $item = new Item($this->redisRepository, $key);
         return $item->isHit();
     }
 
@@ -124,7 +132,12 @@ class Pool implements CacheItemPoolInterface
      */
     public function clear()
     {
-        return $this->redisRepository->clearAll();
+        try {
+            $this->redisRepository->clearAll();
+            return true;
+        } catch (\RuntimeException $exception) {
+            return false;
+        }
     }
 
     /**
@@ -142,6 +155,8 @@ class Pool implements CacheItemPoolInterface
      */
     public function deleteItem($key)
     {
+        $this->checkKeyName($key);
+
         return $this->redisRepository->del($key);
     }
 
@@ -150,7 +165,6 @@ class Pool implements CacheItemPoolInterface
      *
      * @param array $keys
      *   An array of keys that should be removed from the pool.
-
      * @throws InvalidArgumentException
      *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
      *   MUST be thrown.
@@ -161,9 +175,12 @@ class Pool implements CacheItemPoolInterface
     public function deleteItems(array $keys)
     {
         foreach ($keys as $key) {
-            $this->redisRepository->del($key);
+            $this->checkKeyName($key);
         }
 
+        foreach ($keys as $key) {
+            $this->redisRepository->del($key);
+        }
     }
 
     /**
@@ -177,7 +194,22 @@ class Pool implements CacheItemPoolInterface
      */
     public function save(CacheItemInterface $item)
     {
-        return $item->save();
+        // Save the item permanently if it is not from this lib
+        if (!$item instanceof Item) {
+            try {
+                $this->redisRepository->forever($item->getKey(), $item->get());
+                return true;
+            } catch (\RuntimeException $exception) {
+                return false;
+            }
+        }
+
+        try {
+            $item->save();
+            return true;
+        } catch (\RuntimeException $exception) {
+            return false;
+        }
     }
 
     /**
@@ -203,5 +235,16 @@ class Pool implements CacheItemPoolInterface
     public function commit()
     {
         return true;
+    }
+
+    /**
+     * Check whether the key name is legal.
+     *
+     * @param $key
+     */
+    private function checkKeyName($key)
+    {
+        // Try creating a new item
+        new Item($this->redisRepository, $key);
     }
 }

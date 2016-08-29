@@ -3,6 +3,7 @@
 .env.php
 .env
 coverage.xml
+_coverage
 
 /vendor/
 

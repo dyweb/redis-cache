@@ -2,13 +2,10 @@
 <phpunit colors="true" bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="client">
-            <directory>tests/client</directory>
+            <file>./tests/client/PredisTest.php</file>
         </testsuite>
         <testsuite name="predis">
             <directory>tests/predis</directory>
-        </testsuite>
-        <testsuite name="php-redis">
-            <directory>tests/phpredis</directory>
         </testsuite>
         <testsuite name="memory">
             <directory>tests/memory</directory>

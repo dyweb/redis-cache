@@ -26,6 +26,9 @@
     "autoload": {
         "psr-4": {
             "Dy\\": "src/Dy/"
+        },
+        "classmap": {
+            "tests"
         }
     },
     "provide": {

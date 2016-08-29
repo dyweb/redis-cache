@@ -8,7 +8,7 @@
 
 use Dy\Cache\RedisCache;
 
-final class FacadeSet extends PHPUnit_Framework_TestCase
+class FacadeSet extends PHPUnit_Framework_TestCase
 {
     protected $prefix = 'dy:cache:facade';
 

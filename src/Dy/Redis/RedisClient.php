@@ -264,7 +264,7 @@ final class RedisClient implements ClientInterface
     public function srem($key, $member)
     {
         if (!is_array($member)) {
-             return $this->redis->sAdd($key, $member);
+             return $this->redis->sRem($key, $member);
         }
         switch (count($member)) {
             case 1:

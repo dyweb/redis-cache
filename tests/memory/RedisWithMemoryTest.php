@@ -8,9 +8,9 @@
 
 use Dy\Cache\RedisRepository;
 
-final class PredisTestNoSet extends PHPUnit_Framework_TestCase
+class RedisWithMemoryTest extends PHPUnit_Framework_TestCase
 {
-    protected $prefix = 'dy:cache:ptest:noset';
+    protected $prefix = 'dy:cache:memory';
 
     protected $config = null;
 
@@ -28,13 +28,17 @@ final class PredisTestNoSet extends PHPUnit_Framework_TestCase
             ),
             'namespace' => array(
                 'name' => $this->prefix,
-                'key_set_name' => '',
+                'key_set_name' => 'keys',
                 'lazy_record' => false
             ),
-            'memory_cache' => false
+            'memory_cache' => true
         );
-
         $this->cache = new RedisRepository($this->config);
+    }
+
+    public function testUsingMemoryCache()
+    {
+        $this->assertTrue($this->cache->usingMemoryCache());
     }
 
     public function testPut()
@@ -51,6 +55,17 @@ final class PredisTestNoSet extends PHPUnit_Framework_TestCase
         $this->assertEquals(123, $this->cache->get('test2'));
         $this->assertEquals('abc', $this->cache->get('test3'));
         $this->assertEquals(null, $this->cache->get('nullkey'));
+    }
+
+    public function testGetCache()
+    {
+        $this->cache->enableMemoryCache();
+        $this->cache->set('testcache', 'abc', 10);
+        $this->assertEquals('abc', $this->cache->get('testcache'));
+        $this->cache->client()->set('dy:cache:memory:testcache', serialize('aabc'));
+        $this->assertEquals('abc', $this->cache->get('testcache'));
+        $this->cache->client()->del('dy:cache:memory:testcache');
+        $this->assertTrue($this->cache->has('testcache'));
     }
 
     public function testGetDefault()

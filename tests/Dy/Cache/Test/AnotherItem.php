@@ -1,62 +1,22 @@
 <?php
-
 /**
  * Created by PhpStorm.
- * User: bluemit
- * Date: 16-4-20
- * Time: 下午2:53
+ * User: ComMouse
+ * Date: 2016/8/29
+ * Time: 23:25
  */
 
-namespace Dy\Cache;
+namespace Dy\Cache\Test;
 
 use Psr\Cache\CacheItemInterface;
 
-class Item implements CacheItemInterface
+class AnotherItem implements CacheItemInterface
 {
-    /**
-     * A RedisRepository instance this Item used.
-     *
-     * @var RedisRepository
-     */
-    protected $redisRepository;
 
-    /**
-     * Cache Item key name.
-     *
-     * @var string
-     */
-    protected $key;
-
-    /**
-     * Cache Item value.
-     *
-     * @var mixed
-     */
-    protected $value;
-
-    /**
-     * Cache Item expire time.
-     *
-     * @var int
-     */
-    protected $minute;
-
-
-
-    /**
-     * Constructor.
-     *
-     * @param RedisRepository, a RedisRepository instance
-     * @param string, Cache Item key name
-     * @param int, Cache Item expire time
-     */
-    public function __construct($redisRepository, $key, $minute = 10000)
-    {
-        $this->redisRepository = $redisRepository;
-        $this->key = $key;
-        $this->minute = $minute;
-    }
-
+    public $key = '';
+    public $value = null;
+    public $hit = false;
+    public $ttl = 0;
 
     /**
      * Returns the key for the current cache item.
@@ -64,12 +24,12 @@ class Item implements CacheItemInterface
      * The key is loaded by the Implementing Library, but should be available to
      * the higher level callers when needed.
      *
-     * @return string|false
+     * @return string
      *   The key string for this cache item.
      */
     public function getKey()
     {
-        return isset($this->key) ? $this->key : false;
+        return $this->key;
     }
 
     /**
@@ -86,7 +46,7 @@ class Item implements CacheItemInterface
      */
     public function get()
     {
-        return $this->redisRepository->get($this->key);
+        return $this->value;
     }
 
     /**
@@ -100,9 +60,8 @@ class Item implements CacheItemInterface
      */
     public function isHit()
     {
-        return $this->redisRepository->has($this->key);
+        return $this->hit;
     }
-
 
     /**
      * Sets the value represented by this cache item.
@@ -119,11 +78,7 @@ class Item implements CacheItemInterface
      */
     public function set($value)
     {
-        if (!isset($this->key)) {
-            return false;
-        }
         $this->value = $value;
-        $this->redisRepository->put($this->key, $this->value, $this->minute);
         return $this;
     }
 
@@ -141,14 +96,12 @@ class Item implements CacheItemInterface
      */
     public function expiresAt($expiration)
     {
-        $date = new \DateTime();
-        $this->minute = ($expiration-$date)/60;
-        if (!isset($this->value)) {
-            $this->value=0;
+        if (!($expiration instanceof \DateTimeInterface || $expiration instanceof \DateTime)) {
+            throw new InvalidArgumentException('expiration argument must inherit DateTimeInterface');
         }
-        $this->redisRepository->put($this->key, $this->value, $this->minute);
-        $this->value=null;
-        return $this;
+
+        $now = new \DateTime();
+        return $this->expiresAfter($expiration->getTimestamp() - $now->getTimestamp());
     }
 
     /**
@@ -166,23 +119,7 @@ class Item implements CacheItemInterface
      */
     public function expiresAfter($time)
     {
-        $this->minute = $time;
-        if (!isset($this->value)) {
-            $this->value=0;
-        }
-        $this->redisRepository->put($this->key, $this->value, $this->minute);
-//        $this->value=null;
+        $this->ttl = $time;
         return $this;
-    }
-
-    /**
-     * Save the Item to the database;
-     *
-     * @return static
-     *   The called object.
-     */
-    public function save()
-    {
-        return $this->redisRepository->put($this->key, $this->value, $this->minute);
     }
 }

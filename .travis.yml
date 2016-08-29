@@ -31,11 +31,12 @@ before_script:
   - if [ $PHP_VER != "hhvm" ]; then echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
 
 script:
-  - phpunit --coverage-clover=coverage.xml
+  - if [ $PHP_VER == "hhvm" ]; then phpunit -c phpunit.hhvm.xml --coverage-clover=coverage.xml; fi
+  - if [ $PHP_VER != "hhvm" ]; then phpunit --coverage-clover=coverage.xml; fi
   - sh -c "./vendor/bin/phpcs --standard=PSR2 ./src/"
 
 after_success:
-    - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
 
 services:
   - redis-server

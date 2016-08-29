@@ -8,9 +8,9 @@
 
 use Dy\Cache\RedisRepository;
 
-final class PredisTestSet extends PHPUnit_Framework_TestCase
+class RedisNoSetTest extends PHPUnit_Framework_TestCase
 {
-    protected $prefix = 'dy:cache:ptest:set';
+    protected $prefix = 'dy:cache:test:noset';
 
     protected $config = null;
 
@@ -21,14 +21,14 @@ final class PredisTestSet extends PHPUnit_Framework_TestCase
         parent::__construct();
         $this->config = array(
             'connection' => array(
-                'client' => 'predis',
+                'client' => 'redis',
                 'schema' => 'tcp',
                 'host' => '127.0.0.1',
                 'port' => 6379,
             ),
             'namespace' => array(
                 'name' => $this->prefix,
-                'key_set_name' => 'keys',
+                'key_set_name' => '',
                 'lazy_record' => false
             ),
             'memory_cache' => false
@@ -147,6 +147,8 @@ final class PredisTestSet extends PHPUnit_Framework_TestCase
         $this->assertContains($this->prefix . ':decr_test', $keys);
         $this->assertContains($this->prefix . ':decr2_test', $keys);
         $this->assertContains($this->prefix . ':foreverkey', $keys);
+        $keys2 = $this->cache->keysByNamespace($this->prefix);
+        $this->assertEquals(count($keys), count($keys2));
     }
 
     public function testClearAll()
@@ -239,6 +241,8 @@ final class PredisTestSet extends PHPUnit_Framework_TestCase
 
     public function testFinish()
     {
+        $this->cache->delByNamespace($this->prefix);
+
         $client = $this->cache->client();
         $regexp = 'dy\:*';
         $cursor = 0;

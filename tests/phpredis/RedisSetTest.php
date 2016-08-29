@@ -8,9 +8,9 @@
 
 use Dy\Cache\RedisRepository;
 
-final class RedisTestNoSet extends PHPUnit_Framework_TestCase
+class RedisSetTest extends PHPUnit_Framework_TestCase
 {
-    protected $prefix = 'dy:cache:test:noset';
+    protected $prefix = 'dy:cache:test:set';
 
     protected $config = null;
 
@@ -28,7 +28,7 @@ final class RedisTestNoSet extends PHPUnit_Framework_TestCase
             ),
             'namespace' => array(
                 'name' => $this->prefix,
-                'key_set_name' => '',
+                'key_set_name' => 'keys',
                 'lazy_record' => false
             ),
             'memory_cache' => false
@@ -147,6 +147,8 @@ final class RedisTestNoSet extends PHPUnit_Framework_TestCase
         $this->assertContains($this->prefix . ':decr_test', $keys);
         $this->assertContains($this->prefix . ':decr2_test', $keys);
         $this->assertContains($this->prefix . ':foreverkey', $keys);
+        $keys2 = $this->cache->keysByNamespace($this->prefix);
+        $this->assertEquals(count($keys), count($keys2));
     }
 
     public function testClearAll()
@@ -239,8 +241,10 @@ final class RedisTestNoSet extends PHPUnit_Framework_TestCase
 
     public function testFinish()
     {
+        $this->cache->delByNamespace($this->prefix);
+
         $client = $this->cache->client();
-        $regexp = 'dy\:*';
+        $regexp = 'dy:*';
         $cursor = 0;
         do {
             $result = $client->scan($cursor, $regexp);

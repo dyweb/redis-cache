@@ -172,8 +172,8 @@ final class RedisRepository
     public function put($key, $value, $minutes)
     {
         $key = $this->getKeyName($key);
-        $value = is_numeric($value) ? $value : serialize($value);
-        $this->client->setex($key, $minutes * 60, $value);
+        $serializedValue = is_numeric($value) ? $value : serialize($value);
+        $this->client->setex($key, $minutes * 60, $serializedValue);
         $this->recordKey($key, $value);
         return $this;
     }
@@ -203,15 +203,15 @@ final class RedisRepository
      */
     public function get($key, $default = null)
     {
+        $key = $this->getKeyName($key);
         $cachedValue = $this->retrieveCachedKey($key);
         if ($cachedValue !== null) {
             return $cachedValue;
         }
 
-        $key = $this->getKeyName($key);
-        $value = $this->client->get($key);
-        if ($value != false) {
-            $value = is_numeric($value) ? $value : unserialize($value);
+        $serializedValue = $this->client->get($key);
+        if ($serializedValue != false) {
+            $value = is_numeric($serializedValue) ? $serializedValue : unserialize($serializedValue);
             $this->recordKey($key, $value);
             return $value;
         } else {
@@ -227,11 +227,12 @@ final class RedisRepository
      */
     public function has($key)
     {
+        $key = $this->getKeyName($key);
         $cachedValue = $this->retrieveCachedKey($key);
         if ($cachedValue !== null) {
             return true;
         }
-        return $this->client->exists($this->getKeyName($key));
+        return $this->client->exists($key);
     }
 
     /**
@@ -257,8 +258,8 @@ final class RedisRepository
     public function forever($key, $value)
     {
         $key = $this->getKeyName($key);
-        $value = is_numeric($value) ? $value : serialize($value);
-        $this->client->set($key, $value);
+        $serializedValue = is_numeric($value) ? $value : serialize($value);
+        $this->client->set($key, $serializedValue);
         $this->recordKey($key, $value);
         return $this;
     }
