@@ -1,13 +1,13 @@
 {
     "name": "dyweb/redis-cache",
-    "description": "Simple redis cache library with namespaces",
+    "description": "Simple redis cache library with namespaces and PSR-6",
     "type": "library",
     "require": {
         "php": ">=5.3.3",
         "psr/cache": "~1.0"
     },
     "require-dev": {
-    	"predis/predis": "~1.0",
+    	  "predis/predis": "~1.0",
         "phpunit/phpunit": "~4.0",
         "squizlabs/php_codesniffer": "2.*",
         "symfony/yaml": "~2.1"
@@ -17,6 +17,9 @@
         {
             "name": "Kevin Han",
             "email": "hanyikai1996@126.com"
+        },
+        {
+            "name": "Bluemit"
         }
     ],
     "suggest": {
