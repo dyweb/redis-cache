@@ -1,6 +1,6 @@
 # Configuration
 
-Thw configuration is as follows:
+The configuration is as follows:
 
 ```php
 <?php
