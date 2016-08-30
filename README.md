@@ -5,8 +5,8 @@
 
 RedisCache is a simple cache library with key namespaces, Redis support,
 and PSR-6 implementation. To keep it simple, it only provides the simplest
-interface and brings no dependencies (expect PSR-6 interfaces). Away from
-other complex and redundant cache libraries, RedisCache is just tiny and
+interface and brings with no dependencies (except PSR-6 interfaces). Different
+from other complex and redundant cache libraries, RedisCache is just tiny and
 powerful.
 
 ## Features
@@ -15,8 +15,9 @@ powerful.
 - Support PSR-6
 - Store and manage keys in different namespaces
 - Use with fluent interface
-- Use lazy recording for better performance
+- Utilize lazy recording for better performance
 - Utilize additional in-memory cache to reduce I/O
+- No dependencies except PSR-6 interfaces
 
 ## Requirements
 
@@ -29,7 +30,7 @@ RedisCache is [Composer](https://getcomposer.org/) and [PSR-4](http://www.php-fi
 ready, however it is still at the development stage. To install it from
 Composer, you need to edit in your `composer.json`:
 
-```json
+```js
 {
     // ...
     "repositories": [
@@ -64,7 +65,7 @@ Please check the [configuration](doc/configuration.md) doc.
 
 Contributing to this project is highly appreciated through merge requests
 for new features or bug fixes, bug reporting or just suggestions. Please
-follow the PSR-2 coding standard when contributing, and ensure all your
+follow the PSR-2 coding standard when contributing, and ensure that all your
 contributions are not against our coding style and integrated tests.
 
 ### Testing
