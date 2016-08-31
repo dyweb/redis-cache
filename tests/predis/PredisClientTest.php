@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: 凯の凯
  * Date: 2016/8/30
- * Time: 10:37
+ * Time: 10:37.
  */
-
 use Dy\Cache\RedisRepository;
 
 final class PredisClientTest extends PHPUnit_Framework_TestCase
@@ -19,15 +18,15 @@ final class PredisClientTest extends PHPUnit_Framework_TestCase
             'connection' => array(
                 'client' => 'predis',
                 'schema' => 'tcp',
-                'host' => '127.0.0.1',
-                'port' => 6379,
+                'host'   => '127.0.0.1',
+                'port'   => 6379,
             ),
             'namespace' => array(
-                'name' => 'dy:cache:client',
+                'name'         => 'dy:cache:client',
                 'key_set_name' => '',
-                'lazy_record' => false
+                'lazy_record'  => false,
             ),
-            'memory_cache' => false
+            'memory_cache' => false,
         );
     }
 

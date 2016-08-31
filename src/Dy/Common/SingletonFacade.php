@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2015/7/12
- * Time: 0:14
+ * Time: 0:14.
  */
-
 namespace Dy\Common;
 
 /**
@@ -14,11 +13,9 @@ namespace Dy\Common;
  * to realize customized facades.
  *
  * @static
- * @package Dy\Common
  */
 abstract class SingletonFacade extends Facade
 {
-
     protected static $instance = null;
 
     /**
@@ -42,6 +39,7 @@ abstract class SingletonFacade extends Facade
         if (static::$instance !== null) {
             return static::$instance;
         }
+
         return static::$instance = static::createInstance();
     }
 }

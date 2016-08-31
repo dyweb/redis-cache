@@ -3,30 +3,29 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2015/7/12
- * Time: 21:51
+ * Time: 21:51.
  */
-
 namespace Dy\Redis;
 
-use \Redis as Client;
+use Redis as Client;
 
 /**
- * Class RedisClient
+ * Class RedisClient.
  *
  * php-redis implementation of redis client.
- *
- * @package Dy\Redis
  */
 final class RedisClient implements ClientInterface
 {
     /**
      * The redis instance.
+     *
      * @var Client
      */
     protected $redis;
 
     /**
      * Constructor.
+     *
      * @param array $config
      */
     public function __construct(array $config)
@@ -54,7 +53,7 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function quit()
     {
@@ -62,8 +61,10 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return bool
      */
     public function exists($key)
@@ -72,7 +73,8 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
      * @param string $value
      */
@@ -82,9 +84,10 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
-     * @param int $seconds
+     * @param int    $seconds
      * @param string $value
      */
     public function setex($key, $seconds, $value)
@@ -93,8 +96,10 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return string|false
      */
     public function get($key)
@@ -103,8 +108,10 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param array|mixed $keys
+     *
      * @return int
      */
     public function del($keys)
@@ -113,8 +120,10 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return int
      */
     public function incr($key)
@@ -123,13 +132,16 @@ final class RedisClient implements ClientInterface
         if ($value === false) {
             throw new \RuntimeException('Increased key is not an integer');
         }
+
         return $value;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
-     * @param int $increment
+     * @param int    $increment
+     *
      * @return int
      */
     public function incrby($key, $increment)
@@ -138,12 +150,15 @@ final class RedisClient implements ClientInterface
         if ($value === false) {
             throw new \RuntimeException('Increased key is not an integer');
         }
+
         return $value;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return int
      */
     public function decr($key)
@@ -152,13 +167,16 @@ final class RedisClient implements ClientInterface
         if ($value === false) {
             throw new \RuntimeException('Decreased key is not an integer');
         }
+
         return $value;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
-     * @param int $decrement
+     * @param int    $decrement
+     *
      * @return int
      */
     public function decrby($key, $decrement)
@@ -167,12 +185,15 @@ final class RedisClient implements ClientInterface
         if ($value === false) {
             throw new \RuntimeException('Decreased key is not an integer');
         }
+
         return $value;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $pattern
+     *
      * @return array
      */
     public function keys($pattern)
@@ -181,10 +202,12 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
-     * @param int $cursor
+     * {@inheritdoc}
+     *
+     * @param int    $cursor
      * @param string $pattern
-     * @param int $count
+     * @param int    $count
+     *
      * @return array
      */
     public function scan($cursor, $pattern = '', $count = 0)
@@ -197,13 +220,16 @@ final class RedisClient implements ClientInterface
         if ($result == false) {
             $result = array();
         }
+
         return array($cursor, $result);
     }
 
     /**
-     * @inheritdoc
-     * @param string $key
+     * {@inheritdoc}
+     *
+     * @param string      $key
      * @param array|mixed $members
+     *
      * @return int
      */
     public function sadd($key, $members)
@@ -220,13 +246,16 @@ final class RedisClient implements ClientInterface
                 return $this->redis->sAdd($key, $members[0], $members[1], $members[2]);
             default:
                 array_unshift($members, $key);
+
                 return call_user_func_array(array($this->redis, 'sAdd'), $members);
         }
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return int
      */
     public function scard($key)
@@ -235,9 +264,11 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
      * @param string $member
+     *
      * @return bool
      */
     public function sismember($key, $member)
@@ -246,8 +277,10 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return array
      */
     public function smembers($key)
@@ -256,15 +289,17 @@ final class RedisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
-     * @param string $key
+     * {@inheritdoc}
+     *
+     * @param string      $key
      * @param array|mixed $member
+     *
      * @return int
      */
     public function srem($key, $member)
     {
         if (!is_array($member)) {
-             return $this->redis->sRem($key, $member);
+            return $this->redis->sRem($key, $member);
         }
         switch (count($member)) {
             case 1:
@@ -275,16 +310,19 @@ final class RedisClient implements ClientInterface
                 return $this->redis->sRem($key, $member[0], $member[1], $member[2]);
             default:
                 array_unshift($member, $key);
+
                 return call_user_func_array(array($this->redis, 'sRem'), $member);
         }
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
-     * @param int $cursor
+     * @param int    $cursor
      * @param string $pattern
-     * @param int $count
+     * @param int    $count
+     *
      * @return array
      */
     public function sscan($key, $cursor, $pattern = '', $count = 0)
@@ -293,14 +331,15 @@ final class RedisClient implements ClientInterface
         if ($result == false) {
             $result = array(
                 0,
-                array()
+                array(),
             );
         } else {
             $result = array(
                 $cursor,
-                array($result)
+                array($result),
             );
         }
+
         return $result;
     }
 }

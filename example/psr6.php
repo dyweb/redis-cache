@@ -1,25 +1,25 @@
 <?php
-// Composer Autoloader
-require __DIR__ . '/../vendor/autoload.php';
 
-use Dy\Cache\RedisRepository;
-use Dy\Cache\Psr\Item;
+// Composer Autoloader
+require __DIR__.'/../vendor/autoload.php';
+
 use Dy\Cache\Psr\Pool;
+use Dy\Cache\RedisRepository;
 
 // Initialize the repository
 $repository = new RedisRepository(array(
     'connection' => array(
         'client' => 'predis',
         'schema' => 'tcp',
-        'host' => '127.0.0.1',
-        'port' => 6379,
+        'host'   => '127.0.0.1',
+        'port'   => 6379,
     ),
     'namespace' => array(
-        'name' => 'dy:test',
+        'name'         => 'dy:test',
         'key_set_name' => 'keys',
-        'lazy_record' => true
+        'lazy_record'  => true,
     ),
-    'memory_cache' => false
+    'memory_cache' => false,
 ));
 
 // Create a pool

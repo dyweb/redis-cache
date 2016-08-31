@@ -3,21 +3,20 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2015/7/10
- * Time: 23:30
+ * Time: 23:30.
  */
-
 namespace Dy\Cache;
 
 use Dy\Common\SingletonFacade;
 use Dy\Redis\ClientInterface as Client;
 
 /**
- * Class RedisCache
+ * Class RedisCache.
  *
  * The class is a facade of a RedisRepository instance.
  *
  * @static
- * @package Dy\Cache
+ *
  * @see RedisRepository
  *
  * @method static Client            client()
@@ -52,19 +51,19 @@ final class RedisCache extends SingletonFacade
         'connection' => array(
             //'schema' => 'unix',
             //'path' =>'/var/run/redis.sock',
-            'client' => 'predis',
-            'schema' => 'tcp',
-            'host' => '127.0.0.1',
-            'port' => 6379,
+            'client'   => 'predis',
+            'schema'   => 'tcp',
+            'host'     => '127.0.0.1',
+            'port'     => 6379,
             'password' => null,
-            'timeout' => 5.0
+            'timeout'  => 5.0,
         ),
         'namespace' => array(
-            'name' => '',
+            'name'         => '',
             'key_set_name' => '',
-            'lazy_record' => false
+            'lazy_record'  => false,
         ),
-        'memory_cache' => false
+        'memory_cache' => false,
     );
 
     /**
