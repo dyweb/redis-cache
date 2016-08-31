@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2015/7/10
- * Time: 21:32
+ * Time: 21:32.
  */
-
 use Dy\Cache\RedisRepository;
 
 class PredisNoSetTest extends PHPUnit_Framework_TestCase
@@ -23,15 +22,15 @@ class PredisNoSetTest extends PHPUnit_Framework_TestCase
             'connection' => array(
                 'client' => 'predis',
                 'schema' => 'tcp',
-                'host' => '127.0.0.1',
-                'port' => 6379,
+                'host'   => '127.0.0.1',
+                'port'   => 6379,
             ),
             'namespace' => array(
-                'name' => $this->prefix,
+                'name'         => $this->prefix,
                 'key_set_name' => '',
-                'lazy_record' => false
+                'lazy_record'  => false,
             ),
-            'memory_cache' => false
+            'memory_cache' => false,
         );
 
         $this->cache = new RedisRepository($this->config);
@@ -39,7 +38,7 @@ class PredisNoSetTest extends PHPUnit_Framework_TestCase
 
     public function testPut()
     {
-        $this->cache->put('test', 'aaa', 1/60);
+        $this->cache->put('test', 'aaa', 1 / 60);
         $this->cache->put('test2', '123', 1);
         $this->cache->set('test3', 'abc', 10);
     }
@@ -60,6 +59,7 @@ class PredisNoSetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('888', $this->cache->get('nullkey2', '888'));
         $this->assertEquals('a', $this->cache->get('nullkey3', function () {
             static $i = '';
+
             return $i .= 'a';
         }));
     }
@@ -80,7 +80,7 @@ class PredisNoSetTest extends PHPUnit_Framework_TestCase
 
     public function testForever()
     {
-        $this->cache->set('foreverkey', 'leave you', 1/60);
+        $this->cache->set('foreverkey', 'leave you', 1 / 60);
         $this->assertEquals('leave you', $this->cache->get('foreverkey'));
         $this->cache->forever('foreverkey', 'love you');
         sleep(2);
@@ -143,11 +143,11 @@ class PredisNoSetTest extends PHPUnit_Framework_TestCase
     public function testGetAll()
     {
         $keys = $this->cache->getAllKeys();
-        $this->assertContains($this->prefix . ':incr_test', $keys);
-        $this->assertContains($this->prefix . ':incr2_test', $keys);
-        $this->assertContains($this->prefix . ':decr_test', $keys);
-        $this->assertContains($this->prefix . ':decr2_test', $keys);
-        $this->assertContains($this->prefix . ':foreverkey', $keys);
+        $this->assertContains($this->prefix.':incr_test', $keys);
+        $this->assertContains($this->prefix.':incr2_test', $keys);
+        $this->assertContains($this->prefix.':decr_test', $keys);
+        $this->assertContains($this->prefix.':decr2_test', $keys);
+        $this->assertContains($this->prefix.':foreverkey', $keys);
         $keys2 = $this->cache->keysByNamespace($this->prefix);
         $this->assertEquals(count($keys), count($keys2));
     }
@@ -164,8 +164,8 @@ class PredisNoSetTest extends PHPUnit_Framework_TestCase
         $client->set('dy:other:test:haha', 'haha');
         $client->set('dy:other:test:pipi', 'hhhh');
         if (!empty($this->config['namespace']['key_set_name'])) {
-            $client->sadd('dy:other:test:' . $this->config['namespace']['key_set_name'], array(
-                'dy:other:test:haha', 'dy:other:test:pipi'
+            $client->sadd('dy:other:test:'.$this->config['namespace']['key_set_name'], array(
+                'dy:other:test:haha', 'dy:other:test:pipi',
             ));
         }
 
@@ -183,8 +183,8 @@ class PredisNoSetTest extends PHPUnit_Framework_TestCase
         $client->set('dy:other2:test:haha', 'haha');
         $client->set('dy:other2:test:pipi', 'hhhh');
         if (!empty($this->config['namespace']['key_set_name'])) {
-            $client->sadd('dy:other2:test:' . $this->config['namespace']['key_set_name'], array(
-                'dy:other2:test:haha', 'dy:other2:test:pipi'
+            $client->sadd('dy:other2:test:'.$this->config['namespace']['key_set_name'], array(
+                'dy:other2:test:haha', 'dy:other2:test:pipi',
             ));
         }
 
@@ -198,7 +198,7 @@ class PredisNoSetTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(123, $this->cache->setNamespace('dy:space')->set('test', 123, 1)->get('test'));
         $this->assertFalse($this->cache->del('myspace'));
-        $this->assertEquals(true, unserialize($this->cache->client()->get($this->prefix . ':myspace')));
+        $this->assertEquals(true, unserialize($this->cache->client()->get($this->prefix.':myspace')));
         $this->cache->setNamespace($this->prefix);
         $this->assertTrue($this->cache->has('myspace2'));
     }
@@ -225,10 +225,12 @@ class PredisNoSetTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->cache->del('mtest3'));
         $this->assertEquals('a', $this->cache->get('mtest3', function () use (&$i) {
             $i .= 'a';
+
             return $i;
         }));
         $this->assertEquals('aa', $this->cache->get('mtest3', function () use (&$i) {
             $i .= 'a';
+
             return $i;
         }));
 

@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2015/7/12
- * Time: 19:16
+ * Time: 19:16.
  */
-
 namespace Dy\Cache;
 
 use Dy\Redis\ClientInterface as Client;
@@ -15,11 +14,9 @@ use Dy\Redis\ClientInterface as Client;
  * The class manages namespaces and corresponding key sets in Redis cache.
  *
  * @see RedisRepository
- * @package Dy\Cache
  */
 final class RedisNamespace
 {
-
     /**
      * Redis client.
      *
@@ -63,7 +60,7 @@ final class RedisNamespace
      * @param string $namespace
      * @param Client $client
      * @param string $keySetName
-     * @param bool $lazyRecord
+     * @param bool   $lazyRecord
      */
     public function __construct($namespace, $client, $keySetName = '', $lazyRecord = false)
     {
@@ -122,7 +119,7 @@ final class RedisNamespace
         if (!empty($this->keySetName)) {
             return $this->client->smembers($this->getKeyName($this->keySetName));
         } else {
-            return $this->client->keys(preg_quote($this->namespace) . '*');
+            return $this->client->keys(preg_quote($this->namespace).'*');
         }
     }
 
@@ -140,7 +137,7 @@ final class RedisNamespace
                 $this->client->srem($this->getKeyName($this->keySetName), $keys);
             }
         } else {
-            $regexp = preg_quote($this->getPrefix()) . '*';
+            $regexp = preg_quote($this->getPrefix()).'*';
             $cursor = 0;
             do {
                 $result = $this->client->scan($cursor, $regexp);
@@ -197,11 +194,12 @@ final class RedisNamespace
      * Get the actual key name stored in Redis.
      *
      * @param string $key
+     *
      * @return string
      */
     public function getKeyName($key)
     {
-        return $this->getPrefix() . $key;
+        return $this->getPrefix().$key;
     }
 
     /**
@@ -211,6 +209,6 @@ final class RedisNamespace
      */
     protected function getPrefix()
     {
-        return ($this->namespace === '') ? '' : $this->namespace . ':';
+        return ($this->namespace === '') ? '' : $this->namespace.':';
     }
 }

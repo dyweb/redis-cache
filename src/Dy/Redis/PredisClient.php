@@ -3,30 +3,29 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2015/7/12
- * Time: 0:51
+ * Time: 0:51.
  */
-
 namespace Dy\Redis;
 
 use Predis\Client;
 
 /**
- * Class PredisClient
+ * Class PredisClient.
  *
  * Predis implementation of redis client.
- *
- * @package Dy\Redis
  */
 final class PredisClient implements ClientInterface
 {
     /**
      * The redis instance.
+     *
      * @var Client
      */
     protected $redis;
 
     /**
      * Constructor.
+     *
      * @param array $config
      */
     public function __construct(array $config)
@@ -43,7 +42,7 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function quit()
     {
@@ -51,8 +50,10 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return bool
      */
     public function exists($key)
@@ -61,7 +62,8 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
      * @param string $value
      */
@@ -71,9 +73,10 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
-     * @param int $seconds
+     * @param int    $seconds
      * @param string $value
      */
     public function setex($key, $seconds, $value)
@@ -82,8 +85,10 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return string|false
      */
     public function get($key)
@@ -92,8 +97,10 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param array|mixed $keys
+     *
      * @return int
      */
     public function del($keys)
@@ -102,8 +109,10 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return int
      */
     public function incr($key)
@@ -112,9 +121,11 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
-     * @param int $increment
+     * @param int    $increment
+     *
      * @return int
      */
     public function incrby($key, $increment)
@@ -123,8 +134,10 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return int
      */
     public function decr($key)
@@ -133,9 +146,11 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
-     * @param int $decrement
+     * @param int    $decrement
+     *
      * @return int
      */
     public function decrby($key, $decrement)
@@ -144,8 +159,10 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $pattern
+     *
      * @return array
      */
     public function keys($pattern)
@@ -154,10 +171,12 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
-     * @param int $cursor
+     * {@inheritdoc}
+     *
+     * @param int    $cursor
      * @param string $pattern
-     * @param int $count
+     * @param int    $count
+     *
      * @return array
      */
     public function scan($cursor, $pattern = '', $count = 0)
@@ -169,13 +188,16 @@ final class PredisClient implements ClientInterface
         if ($count != 0) {
             $option['count'] = $count;
         }
+
         return $this->redis->scan($cursor, $option);
     }
 
     /**
-     * @inheritdoc
-     * @param string $key
+     * {@inheritdoc}
+     *
+     * @param string      $key
      * @param array|mixed $members
+     *
      * @return int
      */
     public function sadd($key, $members)
@@ -184,8 +206,10 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return int
      */
     public function scard($key)
@@ -194,9 +218,11 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
      * @param string $member
+     *
      * @return bool
      */
     public function sismember($key, $member)
@@ -205,8 +231,10 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
+     *
      * @return array
      */
     public function smembers($key)
@@ -215,9 +243,11 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
-     * @param string $key
+     * {@inheritdoc}
+     *
+     * @param string      $key
      * @param array|mixed $member
+     *
      * @return int
      */
     public function srem($key, $member)
@@ -226,11 +256,13 @@ final class PredisClient implements ClientInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param string $key
-     * @param int $cursor
+     * @param int    $cursor
      * @param string $pattern
-     * @param int $count
+     * @param int    $count
+     *
      * @return array
      */
     public function sscan($key, $cursor, $pattern = '', $count = 0)
@@ -242,6 +274,7 @@ final class PredisClient implements ClientInterface
         if ($count != 0) {
             $option['count'] = $count;
         }
+
         return $this->redis->sscan($key, $cursor, $options);
     }
 }

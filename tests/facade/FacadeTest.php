@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2015/7/10
- * Time: 21:32
+ * Time: 21:32.
  */
-
 use Dy\Cache\RedisCache;
 
 class FacadeSet extends PHPUnit_Framework_TestCase
@@ -21,15 +20,15 @@ class FacadeSet extends PHPUnit_Framework_TestCase
             'connection' => array(
                 'client' => 'predis',
                 'schema' => 'tcp',
-                'host' => '127.0.0.1',
-                'port' => 6379,
+                'host'   => '127.0.0.1',
+                'port'   => 6379,
             ),
             'namespace' => array(
-                'name' => $this->prefix,
+                'name'         => $this->prefix,
                 'key_set_name' => 'keys',
-                'lazy_record' => true
+                'lazy_record'  => true,
             ),
-            'memory_cache' => false
+            'memory_cache' => false,
         );
     }
 
@@ -49,7 +48,7 @@ class FacadeSet extends PHPUnit_Framework_TestCase
 
     public function testPut()
     {
-        RedisCache::put('test', 'aaa', 1/60);
+        RedisCache::put('test', 'aaa', 1 / 60);
         RedisCache::put('test2', '123', 1);
     }
 

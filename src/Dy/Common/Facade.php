@@ -3,12 +3,11 @@
 namespace Dy\Common;
 
 /**
- * Class Facade
+ * Class Facade.
  *
  * The class is a facade of inner instances to use syntax like Class::method().
  *
  * @static
- * @package Dy\Common
  */
 abstract class Facade
 {
@@ -33,8 +32,9 @@ abstract class Facade
     /**
      * Handle dynamic, static calls to the object.
      *
-     * @param  string  $method
-     * @param  array   $args
+     * @param string $method
+     * @param array  $args
+     *
      * @return mixed
      */
     public static function __callStatic($method, array $args)

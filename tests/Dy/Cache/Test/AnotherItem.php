@@ -3,16 +3,14 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2016/8/29
- * Time: 23:25
+ * Time: 23:25.
  */
-
 namespace Dy\Cache\Test;
 
 use Psr\Cache\CacheItemInterface;
 
 class AnotherItem implements CacheItemInterface
 {
-
     public $key = '';
     public $value = null;
     public $hit = false;
@@ -25,7 +23,7 @@ class AnotherItem implements CacheItemInterface
      * the higher level callers when needed.
      *
      * @return string
-     *   The key string for this cache item.
+     *                The key string for this cache item.
      */
     public function getKey()
     {
@@ -42,7 +40,7 @@ class AnotherItem implements CacheItemInterface
      * differentiate between "null value was found" and "no value was found."
      *
      * @return mixed
-     *   The value corresponding to this cache item's key, or null if not found.
+     *               The value corresponding to this cache item's key, or null if not found.
      */
     public function get()
     {
@@ -56,7 +54,7 @@ class AnotherItem implements CacheItemInterface
      * and calling get().
      *
      * @return bool
-     *   True if the request resulted in a cache hit. False otherwise.
+     *              True if the request resulted in a cache hit. False otherwise.
      */
     public function isHit()
     {
@@ -71,14 +69,15 @@ class AnotherItem implements CacheItemInterface
      * Library.
      *
      * @param mixed $value
-     *   The serializable value to be stored.
+     *                     The serializable value to be stored.
      *
      * @return static
-     *   The invoked object.
+     *                The invoked object.
      */
     public function set($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -86,13 +85,13 @@ class AnotherItem implements CacheItemInterface
      * Sets the expiration time for this cache item.
      *
      * @param \DateTimeInterface $expiration
-     *   The point in time after which the item MUST be considered expired.
-     *   If null is passed explicitly, a default value MAY be used. If none is set,
-     *   the value should be stored permanently or for as long as the
-     *   implementation allows.
+     *                                       The point in time after which the item MUST be considered expired.
+     *                                       If null is passed explicitly, a default value MAY be used. If none is set,
+     *                                       the value should be stored permanently or for as long as the
+     *                                       implementation allows.
      *
      * @return static
-     *   The called object.
+     *                The called object.
      */
     public function expiresAt($expiration)
     {
@@ -101,6 +100,7 @@ class AnotherItem implements CacheItemInterface
         }
 
         $now = new \DateTime();
+
         return $this->expiresAfter($expiration->getTimestamp() - $now->getTimestamp());
     }
 
@@ -108,18 +108,19 @@ class AnotherItem implements CacheItemInterface
      * Sets the expiration time for this cache item.
      *
      * @param int|\DateInterval $time
-     *   The period of time from the present after which the item MUST be considered
-     *   expired. An integer parameter is understood to be the time in seconds until
-     *   expiration. If null is passed explicitly, a default value MAY be used.
-     *   If none is set, the value should be stored permanently or for as long as the
-     *   implementation allows.
+     *                                The period of time from the present after which the item MUST be considered
+     *                                expired. An integer parameter is understood to be the time in seconds until
+     *                                expiration. If null is passed explicitly, a default value MAY be used.
+     *                                If none is set, the value should be stored permanently or for as long as the
+     *                                implementation allows.
      *
      * @return static
-     *   The called object.
+     *                The called object.
      */
     public function expiresAfter($time)
     {
         $this->ttl = $time;
+
         return $this;
     }
 }

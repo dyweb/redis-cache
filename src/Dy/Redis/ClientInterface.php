@@ -3,17 +3,14 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2015/7/12
- * Time: 0:33
+ * Time: 0:33.
  */
-
 namespace Dy\Redis;
 
 /**
- * Interface ClientInterface
+ * Interface ClientInterface.
  *
  * Interface for Redis connection and operation.
- *
- * @package Dy\Redis
  */
 interface ClientInterface
 {
@@ -26,6 +23,7 @@ interface ClientInterface
      * Returns if key exists.
      *
      * @param $key
+     *
      * @return bool
      */
     public function exists($key);
@@ -45,7 +43,7 @@ interface ClientInterface
      * given number of seconds.
      *
      * @param string $key
-     * @param int $seconds
+     * @param int    $seconds
      * @param string $value
      */
     public function setex($key, $seconds, $value);
@@ -56,6 +54,7 @@ interface ClientInterface
      * is not a string, because GET only handles string values.
      *
      * @param string $key
+     *
      * @return string|false
      */
     public function get($key);
@@ -64,6 +63,7 @@ interface ClientInterface
      * Removes the specified keys. A key is ignored if it does not exist.
      *
      * @param array|mixed $keys
+     *
      * @return int
      */
     public function del($keys);
@@ -73,6 +73,7 @@ interface ClientInterface
      * it is set to 0 before performing the operation.
      *
      * @param string $key
+     *
      * @return int
      */
     public function incr($key);
@@ -82,7 +83,8 @@ interface ClientInterface
      * it is set to 0 before performing the operation.
      *
      * @param string $key
-     * @param int $increment
+     * @param int    $increment
+     *
      * @return int
      */
     public function incrby($key, $increment);
@@ -92,6 +94,7 @@ interface ClientInterface
      * set to 0 before performing the operation.
      *
      * @param string $key
+     *
      * @return int
      */
     public function decr($key);
@@ -101,7 +104,8 @@ interface ClientInterface
      * it is set to 0 before performing the operation.
      *
      * @param string $key
-     * @param int $decrement
+     * @param int    $decrement
+     *
      * @return int
      */
     public function decrby($key, $decrement);
@@ -110,6 +114,7 @@ interface ClientInterface
      * Returns all keys matching pattern.
      *
      * @param string $pattern
+     *
      * @return array
      */
     public function keys($pattern);
@@ -117,9 +122,10 @@ interface ClientInterface
     /**
      * Incrementally iterate the keys space.
      *
-     * @param int $cursor
+     * @param int    $cursor
      * @param string $pattern
-     * @param int $count
+     * @param int    $count
+     *
      * @return array
      */
     public function scan($cursor, $pattern = '', $count = 0);
@@ -130,8 +136,9 @@ interface ClientInterface
      * set are ignored. If key does not exist, a new set is
      * created before adding the specified members.
      *
-     * @param string $key
+     * @param string      $key
      * @param array|mixed $members
+     *
      * @return int The number of elements that were added to the set
      */
     public function sadd($key, $members);
@@ -140,6 +147,7 @@ interface ClientInterface
      * Returns the set cardinality (number of elements) of the set stored at key.
      *
      * @param string $key
+     *
      * @return int
      */
     public function scard($key);
@@ -149,6 +157,7 @@ interface ClientInterface
      *
      * @param string $key
      * @param string $member
+     *
      * @return bool
      */
     public function sismember($key, $member);
@@ -157,6 +166,7 @@ interface ClientInterface
      * Returns all the members of the set value stored at key.
      *
      * @param string $key
+     *
      * @return array
      */
     public function smembers($key);
@@ -168,7 +178,8 @@ interface ClientInterface
      * set and this command returns 0.
      *
      * @param string $key
-     * @param array $member
+     * @param array  $member
+     *
      * @return int The number of members that were removed from the
      *             set, not including non existing members
      */
@@ -178,9 +189,10 @@ interface ClientInterface
      * Incrementally iterate Set elements.
      *
      * @param string $key
-     * @param int $cursor
+     * @param int    $cursor
      * @param string $pattern
-     * @param int $count
+     * @param int    $count
+     *
      * @return array
      */
     public function sscan($key, $cursor, $pattern = '', $count = 0);

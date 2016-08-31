@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2015/7/12
- * Time: 0:24
+ * Time: 0:24.
  */
-
 namespace Dy\Cache;
 
 use Closure;
@@ -14,8 +13,6 @@ use Dy\Redis\ClientInterface as Client;
 /**
  * Class RedisRepository
  * The class is the core implementation of Redis cache.
- *
- * @package Dy\Cache
  */
 final class RedisRepository
 {
@@ -72,7 +69,7 @@ final class RedisRepository
     public function __construct(array $config)
     {
         $this->client = $this->getClient($config['connection']);
-        $this->namespaceLazyRecord = (bool)$config['namespace']['lazy_record'];
+        $this->namespaceLazyRecord = (bool) $config['namespace']['lazy_record'];
         $this->keySetName = $config['namespace']['key_set_name'];
         $this->setNamespace($config['namespace']['name']);
         if ($config['memory_cache']) {
@@ -91,6 +88,7 @@ final class RedisRepository
 
     /**
      * Get the redis client.
+     *
      * @return Client
      */
     public function client()
@@ -101,9 +99,10 @@ final class RedisRepository
     /**
      * Switch to a new namespace.
      *
-     * @param string      $namespace    Namespace.
-     * @param bool|null   $lazyRecord   Whether to enable lazy record of the key name set.
-     *                                  If not given, the default config will be used.
+     * @param string    $namespace  Namespace.
+     * @param bool|null $lazyRecord Whether to enable lazy record of the key name set.
+     *                              If not given, the default config will be used.
+     *
      * @return $this
      */
     public function setNamespace($namespace, $lazyRecord = null)
@@ -118,6 +117,7 @@ final class RedisRepository
             $this->keySetName,
             $lazyRecord
         );
+
         return $this;
     }
 
@@ -140,6 +140,7 @@ final class RedisRepository
         } else {
             $this->memoryCache = new MemoryRepository();
         }
+
         return $this;
     }
 
@@ -150,6 +151,7 @@ final class RedisRepository
     {
         $this->enableMemoryCache = false;
         $this->memoryCache = null;
+
         return $this;
     }
 
@@ -167,6 +169,7 @@ final class RedisRepository
      * @param string $key
      * @param mixed  $value
      * @param int    $minutes Expired time.
+     *
      * @return $this
      */
     public function put($key, $value, $minutes)
@@ -175,21 +178,25 @@ final class RedisRepository
         $serializedValue = is_numeric($value) ? $value : serialize($value);
         $this->client->setex($key, $minutes * 60, $serializedValue);
         $this->recordKey($key, $value);
+
         return $this;
     }
 
     /**
-     * Put the data into the cache, the same as put()
+     * Put the data into the cache, the same as put().
      *
      * @see put()
+     *
      * @param string $key
      * @param mixed  $value
      * @param int    $minutes Expired time.
+     *
      * @return $this
      */
     public function set($key, $value, $minutes)
     {
         $this->put($key, $value, $minutes);
+
         return $this;
     }
 
@@ -197,8 +204,9 @@ final class RedisRepository
      * Get data from cache, if the key does not exist,
      * $default(value or Closure) will be replaced.
      *
-     * @param string $key
+     * @param string        $key
      * @param mixed|Closure $default
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -213,6 +221,7 @@ final class RedisRepository
         if ($serializedValue != false) {
             $value = is_numeric($serializedValue) ? $serializedValue : unserialize($serializedValue);
             $this->recordKey($key, $value);
+
             return $value;
         } else {
             return $default instanceof Closure ? $default() : $default;
@@ -223,6 +232,7 @@ final class RedisRepository
      * Return whether the key exists in the cache.
      *
      * @param string $key
+     *
      * @return bool
      */
     public function has($key)
@@ -232,6 +242,7 @@ final class RedisRepository
         if ($cachedValue !== null) {
             return true;
         }
+
         return $this->client->exists($key);
     }
 
@@ -239,20 +250,23 @@ final class RedisRepository
      * Retrieve a key from the cache and delete it.
      *
      * @param string $key
+     *
      * @return mixed
      */
     public function pull($key)
     {
         $value = $this->get($key);
         $this->del($key);
+
         return $value;
     }
 
     /**
-     * Save the data persistently into the cache
+     * Save the data persistently into the cache.
      *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
+     *
      * @return $this
      */
     public function forever($key, $value)
@@ -261,6 +275,7 @@ final class RedisRepository
         $serializedValue = is_numeric($value) ? $value : serialize($value);
         $this->client->set($key, $serializedValue);
         $this->recordKey($key, $value);
+
         return $this;
     }
 
@@ -268,19 +283,22 @@ final class RedisRepository
      * Delete a key from the cache.
      *
      * @param string $key
+     *
      * @return bool
      */
     public function del($key)
     {
         $key = $this->getKeyName($key);
         $this->recordDeletedKey($key);
+
         return $this->client->del(array($key)) === 1;
     }
 
     /**
-     * Delete a key from the cache, the same as del()
+     * Delete a key from the cache, the same as del().
      *
      * @param string $key
+     *
      * @return bool
      */
     public function forget($key)
@@ -292,7 +310,8 @@ final class RedisRepository
      * Increase the value of the key by $value.
      *
      * @param string $key
-     * @param int $value
+     * @param int    $value
+     *
      * @return int
      */
     public function increment($key, $value = 1)
@@ -300,6 +319,7 @@ final class RedisRepository
         $key = $this->getKeyName($key);
         $value = $this->client->incrby($key, $value);
         $this->recordKey($key, $value);
+
         return $value;
     }
 
@@ -307,7 +327,8 @@ final class RedisRepository
      * Decrease the value of the key by $value.
      *
      * @param string $key
-     * @param int $value
+     * @param int    $value
+     *
      * @return int
      */
     public function decrement($key, $value = 1)
@@ -315,6 +336,7 @@ final class RedisRepository
         $key = $this->getKeyName($key);
         $value = $this->client->decrby($key, $value);
         $this->recordKey($key, $value);
+
         return $value;
     }
 
@@ -324,6 +346,7 @@ final class RedisRepository
      * so you should execute it when few users access the server.
      *
      * @see RedisNamespace::getAllKeys()
+     *
      * @return array
      */
     public function getAllKeys()
@@ -337,7 +360,9 @@ final class RedisRepository
      * so you should execute it when few users access the server.
      *
      * @see RedisNamespace::getAllKeys()
+     *
      * @param string $namespace
+     *
      * @return array
      */
     public function keysByNamespace($namespace)
@@ -348,6 +373,7 @@ final class RedisRepository
         $namespaceObj = new RedisNamespace($namespace, $this->client, $this->keySetName);
         $keys = $namespaceObj->getAllKeys();
         unset($namespaceObj);
+
         return $keys;
     }
 
@@ -364,6 +390,7 @@ final class RedisRepository
         if ($this->enableMemoryCache) {
             $this->memoryCache->clearAll();
         }
+
         return $this;
     }
 
@@ -373,18 +400,22 @@ final class RedisRepository
      * execute it when few users access the server.
      *
      * @see RedisNamespace::clearAllKeys()
+     *
      * @param string $namespace
+     *
      * @return $this
      */
     public function delByNamespace($namespace)
     {
         if ($this->namespace->toString() == $namespace) {
             $this->clearAll();
+
             return $this;
         }
         $namespaceObj = new RedisNamespace($namespace, $this->client, $this->keySetName);
         $namespaceObj->clearAllKeys();
         unset($namespaceObj);
+
         return $this;
     }
 
@@ -392,6 +423,7 @@ final class RedisRepository
      * Get the client instance.
      *
      * @param array $config
+     *
      * @return Client
      */
     protected function getClient(array $config)
@@ -403,6 +435,7 @@ final class RedisRepository
         } else {
             throw new \RuntimeException('Unsupported client type');
         }
+
         return new $className($config);
     }
 
@@ -437,7 +470,9 @@ final class RedisRepository
      * Get the actual name of the key stored in Redis.
      *
      * @see RedisNamespace::getKeyName()
+     *
      * @param string $key
+     *
      * @return string
      */
     protected function getKeyName($key)
@@ -449,8 +484,9 @@ final class RedisRepository
      * Record the key into the namespace key set.
      *
      * @see RedisNamespace::recordKey()
+     *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      */
     protected function recordKey($key, $value)
     {
@@ -462,6 +498,7 @@ final class RedisRepository
      * Remove the key from the namespace key set.
      *
      * @see RedisNamespace::deleteKey()
+     *
      * @param string $key
      */
     protected function recordDeletedKey($key)
@@ -474,8 +511,9 @@ final class RedisRepository
      * Put the key into memory cache.
      *
      * @see MemoryRepository::put()
+     *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      */
     protected function cacheKey($key, $value)
     {
@@ -489,14 +527,17 @@ final class RedisRepository
      * Get the key from memory cache.
      *
      * @see MemoryRepository::get()
+     *
      * @param string $key
+     *
      * @return mixed
      */
     protected function retrieveCachedKey($key)
     {
         if (!$this->enableMemoryCache) {
-            return null;
+            return;
         }
+
         return $this->memoryCache->get($key);
     }
 }

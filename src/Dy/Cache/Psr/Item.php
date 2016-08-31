@@ -4,9 +4,8 @@
  * Created by PhpStorm.
  * User: bluemit
  * Date: 16-4-20
- * Time: 下午2:53
+ * Time: 下午2:53.
  */
-
 namespace Dy\Cache\Psr;
 
 use Dy\Cache\Exception\InvalidArgumentException;
@@ -14,8 +13,7 @@ use Dy\Cache\RedisRepository;
 use Psr\Cache\CacheItemInterface;
 
 /**
- * Class Item
- * @package Dy\Cache
+ * Class Item.
  */
 class Item implements CacheItemInterface
 {
@@ -51,8 +49,8 @@ class Item implements CacheItemInterface
      * Constructor.
      *
      * @param RedisRepository $redisRepository a RedisRepository instance
-     * @param string $key Cache Item key name
-     * @param int $minute Cache Item expire time
+     * @param string          $key             Cache Item key name
+     * @param int             $minute          Cache Item expire time
      */
     public function __construct(RedisRepository $redisRepository, $key, $minute = null)
     {
@@ -88,7 +86,7 @@ class Item implements CacheItemInterface
      * the higher level callers when needed.
      *
      * @return string
-     *   The key string for this cache item.
+     *                The key string for this cache item.
      */
     public function getKey()
     {
@@ -100,6 +98,7 @@ class Item implements CacheItemInterface
      * Note that the old item data will be kept.
      *
      * @param string $key The name of the key.
+     *
      * @return static
      */
     public function setKey($key)
@@ -119,15 +118,15 @@ class Item implements CacheItemInterface
     private function checkKeyName($key)
     {
         if (!is_string($key)) {
-            throw new InvalidArgumentException('Illegal key name: ' . strval($key));
+            throw new InvalidArgumentException('Illegal key name: '.strval($key));
         }
 
         if ($key == '') {
-            throw new InvalidArgumentException('Illegal key name: ' . strval($key));
+            throw new InvalidArgumentException('Illegal key name: '.strval($key));
         }
 
         if (preg_match('/[\\{\\}\\(\\)\\/\\\\@:]/', $key) !== 0) {
-            throw new InvalidArgumentException('Illegal key name: ' . strval($key));
+            throw new InvalidArgumentException('Illegal key name: '.strval($key));
         }
     }
 
@@ -135,6 +134,7 @@ class Item implements CacheItemInterface
      * Set the expired minute for the item. Changes will apply after the item is saved.
      *
      * @param float|null $minute
+     *
      * @return static
      */
     protected function setExpiredMinute($minute)
@@ -154,7 +154,7 @@ class Item implements CacheItemInterface
      * differentiate between "null value was found" and "no value was found."
      *
      * @return mixed
-     *   The value corresponding to this cache item's key, or null if not found.
+     *               The value corresponding to this cache item's key, or null if not found.
      */
     public function get()
     {
@@ -169,7 +169,7 @@ class Item implements CacheItemInterface
      * Get the value from the redis repository.
      *
      * @return mixed
-     *   The value corresponding to this cache item's key, or null if not found.
+     *               The value corresponding to this cache item's key, or null if not found.
      */
     protected function getFromRepository()
     {
@@ -183,7 +183,7 @@ class Item implements CacheItemInterface
      * and calling get().
      *
      * @return bool
-     *   True if the request resulted in a cache hit. False otherwise.
+     *              True if the request resulted in a cache hit. False otherwise.
      */
     public function isHit()
     {
@@ -198,10 +198,10 @@ class Item implements CacheItemInterface
      * Library.
      *
      * @param mixed $value
-     *   The serializable value to be stored.
+     *                     The serializable value to be stored.
      *
      * @return static
-     *   The invoked object.
+     *                The invoked object.
      */
     public function set($value)
     {
@@ -214,13 +214,13 @@ class Item implements CacheItemInterface
      * Sets the expiration time for this cache item.
      *
      * @param \DateTimeInterface $expiration
-     *   The point in time after which the item MUST be considered expired.
-     *   If null is passed explicitly, a default value MAY be used. If none is set,
-     *   the value should be stored permanently or for as long as the
-     *   implementation allows.
+     *                                       The point in time after which the item MUST be considered expired.
+     *                                       If null is passed explicitly, a default value MAY be used. If none is set,
+     *                                       the value should be stored permanently or for as long as the
+     *                                       implementation allows.
      *
      * @return static
-     *   The called object.
+     *                The called object.
      */
     public function expiresAt($expiration)
     {
@@ -229,6 +229,7 @@ class Item implements CacheItemInterface
         }
 
         $now = new \DateTime();
+
         return $this->setExpiredMinute(($expiration->getTimestamp() - $now->getTimestamp()) / 60);
     }
 
@@ -236,14 +237,14 @@ class Item implements CacheItemInterface
      * Sets the expiration time for this cache item.
      *
      * @param int|\DateInterval $time
-     *   The period of time from the present after which the item MUST be considered
-     *   expired. An integer parameter is understood to be the time in seconds until
-     *   expiration. If null is passed explicitly, a default value MAY be used.
-     *   If none is set, the value should be stored permanently or for as long as the
-     *   implementation allows.
+     *                                The period of time from the present after which the item MUST be considered
+     *                                expired. An integer parameter is understood to be the time in seconds until
+     *                                expiration. If null is passed explicitly, a default value MAY be used.
+     *                                If none is set, the value should be stored permanently or for as long as the
+     *                                implementation allows.
      *
      * @return static
-     *   The called object.
+     *                The called object.
      */
     public function expiresAfter($time)
     {
@@ -263,10 +264,10 @@ class Item implements CacheItemInterface
     }
 
     /**
-     * Save the Item to the database;
+     * Save the Item to the database;.
      *
      * @return static
-     *   The called object.
+     *                The called object.
      */
     public function save()
     {

@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: bluemit
  * Date: 16-4-23
- * Time: 下午8:38
+ * Time: 下午8:38.
  */
-
 namespace Dy\Cache\Psr;
 
 use Dy\Cache\Exception\InvalidArgumentException;
@@ -16,8 +15,6 @@ use Psr\Cache\CacheItemPoolInterface;
 /**
  * Class Pool
  * CacheItemPoolInterface generates CacheItemInterface objects.
- *
- * @package Dy\Cache
  */
 class Pool implements CacheItemPoolInterface
 {
@@ -30,6 +27,7 @@ class Pool implements CacheItemPoolInterface
 
     /**
      * Constructor.
+     *
      * @param RedisRepository
      */
     public function __construct($redisRepository)
@@ -39,6 +37,7 @@ class Pool implements CacheItemPoolInterface
 
     /**
      * Get the redis repository bound to this pool.
+     *
      * @return RedisRepository
      */
     public function getRepository()
@@ -53,20 +52,21 @@ class Pool implements CacheItemPoolInterface
      * a cache miss. It MUST NOT return null.
      *
      * @param string $key
-     *   The key for which to return the corresponding Cache Item.
+     *                    The key for which to return the corresponding Cache Item.
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
-     *   MUST be thrown.
+     *                                  If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *                                  MUST be thrown.
      *
      * @return Item
-     *   The corresponding Cache Item.
+     *              The corresponding Cache Item.
      */
     public function getItem($key)
     {
         $this->checkKeyName($key);
 
         $item = new Item($this->redisRepository, $key);
+
         return $item;
     }
 
@@ -74,17 +74,17 @@ class Pool implements CacheItemPoolInterface
      * Returns a traversable set of cache items.
      *
      * @param array $keys
-     * An indexed array of keys of items to retrieve.
+     *                    An indexed array of keys of items to retrieve.
      *
      * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
-     *   MUST be thrown.
+     *                                  If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *                                  MUST be thrown.
      *
      * @return array|\Traversable
-     *   A traversable collection of Cache Items keyed by the cache keys of
-     *   each item. A Cache item will be returned for each key, even if that
-     *   key is not found. However, if no keys are specified then an empty
-     *   traversable MUST be returned instead.
+     *                            A traversable collection of Cache Items keyed by the cache keys of
+     *                            each item. A Cache item will be returned for each key, even if that
+     *                            key is not found. However, if no keys are specified then an empty
+     *                            traversable MUST be returned instead.
      */
     public function getItems(array $keys = array())
     {
@@ -94,6 +94,7 @@ class Pool implements CacheItemPoolInterface
 
         // $this in closure can only be used in PHP 5.4+
         $repository = $this->getRepository();
+
         return array_map(function ($key) use ($repository) {
             return new Item($repository, $key);
         }, $keys);
@@ -107,20 +108,21 @@ class Pool implements CacheItemPoolInterface
      * such situation use CacheItemInterface::isHit() instead.
      *
      * @param string $key
-     *    The key for which to check existence.
+     *                    The key for which to check existence.
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
-     *   MUST be thrown.
+     *                                  If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *                                  MUST be thrown.
      *
      * @return bool
-     *  True if item exists in the cache, false otherwise.
+     *              True if item exists in the cache, false otherwise.
      */
     public function hasItem($key)
     {
         $this->checkKeyName($key);
 
         $item = new Item($this->redisRepository, $key);
+
         return $item->isHit();
     }
 
@@ -128,12 +130,13 @@ class Pool implements CacheItemPoolInterface
      * Deletes all items in the pool.
      *
      * @return bool
-     *   True if the pool was successfully cleared. False if there was an error.
+     *              True if the pool was successfully cleared. False if there was an error.
      */
     public function clear()
     {
         try {
             $this->redisRepository->clearAll();
+
             return true;
         } catch (\RuntimeException $exception) {
             return false;
@@ -144,14 +147,14 @@ class Pool implements CacheItemPoolInterface
      * Removes the item from the pool.
      *
      * @param string $key
-     *   The key for which to delete
+     *                    The key for which to delete
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
-     *   MUST be thrown.
+     *                                  If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *                                  MUST be thrown.
      *
      * @return bool
-     *   True if the item was successfully removed. False if there was an error.
+     *              True if the item was successfully removed. False if there was an error.
      */
     public function deleteItem($key)
     {
@@ -164,13 +167,14 @@ class Pool implements CacheItemPoolInterface
      * Removes multiple items from the pool.
      *
      * @param array $keys
-     *   An array of keys that should be removed from the pool.
+     *                    An array of keys that should be removed from the pool.
+     *
      * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
-     *   MUST be thrown.
+     *                                  If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *                                  MUST be thrown.
      *
      * @return bool
-     *   True if the items were successfully removed. False if there was an error.
+     *              True if the items were successfully removed. False if there was an error.
      */
     public function deleteItems(array $keys)
     {
@@ -187,10 +191,10 @@ class Pool implements CacheItemPoolInterface
      * Persists a cache item immediately.
      *
      * @param CacheItemInterface $item
-     *   The cache item to save.
+     *                                 The cache item to save.
      *
      * @return bool
-     *   True if the item was successfully persisted. False if there was an error.
+     *              True if the item was successfully persisted. False if there was an error.
      */
     public function save(CacheItemInterface $item)
     {
@@ -198,6 +202,7 @@ class Pool implements CacheItemPoolInterface
         if (!$item instanceof Item) {
             try {
                 $this->redisRepository->forever($item->getKey(), $item->get());
+
                 return true;
             } catch (\RuntimeException $exception) {
                 return false;
@@ -206,6 +211,7 @@ class Pool implements CacheItemPoolInterface
 
         try {
             $item->save();
+
             return true;
         } catch (\RuntimeException $exception) {
             return false;
@@ -216,10 +222,10 @@ class Pool implements CacheItemPoolInterface
      * Sets a cache item to be persisted later.
      *
      * @param CacheItemInterface $item
-     *   The cache item to save.
+     *                                 The cache item to save.
      *
      * @return bool
-     *   False if the item could not be queued or if a commit was attempted and failed. True otherwise.
+     *              False if the item could not be queued or if a commit was attempted and failed. True otherwise.
      */
     public function saveDeferred(CacheItemInterface $item)
     {
@@ -230,7 +236,7 @@ class Pool implements CacheItemPoolInterface
      * Persists any deferred cache items.
      *
      * @return bool
-     *   True if all not-yet-saved items were successfully saved or there were none. False otherwise.
+     *              True if all not-yet-saved items were successfully saved or there were none. False otherwise.
      */
     public function commit()
     {

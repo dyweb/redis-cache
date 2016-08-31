@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2016/8/30
- * Time: 0:36
+ * Time: 0:36.
  */
-
 use Dy\Cache\MemoryRepository;
 
 class MemoryRepositoryTest extends \PHPUnit_Framework_TestCase

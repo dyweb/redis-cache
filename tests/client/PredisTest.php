@@ -1,18 +1,18 @@
 <?php
+
 use Dy\Redis\PredisClient;
 
 /**
  * Created by PhpStorm.
  * User: ComMouse
  * Date: 2016/8/29
- * Time: 23:46
+ * Time: 23:46.
  */
-
-
 class PredisTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * The redis instance.
+     *
      * @var PredisClient
      */
     protected $client;
@@ -22,8 +22,8 @@ class PredisTest extends \PHPUnit_Framework_TestCase
         parent::__construct();
         $this->client = new PredisClient(array(
             'schema' => 'tcp',
-            'host' => '127.0.0.1',
-            'port' => 6379
+            'host'   => '127.0.0.1',
+            'port'   => 6379,
         ));
     }
 
@@ -31,8 +31,8 @@ class PredisTest extends \PHPUnit_Framework_TestCase
     {
         $client = new PredisClient(array(
             'schema' => 'tcp',
-            'host' => '127.0.0.1',
-            'port' => 6379
+            'host'   => '127.0.0.1',
+            'port'   => 6379,
         ));
         unset($client);
     }

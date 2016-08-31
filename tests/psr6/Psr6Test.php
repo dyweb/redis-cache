@@ -1,9 +1,9 @@
 <?php
 
 use Dy\Cache\Exception\InvalidArgumentException;
-use Dy\Cache\RedisRepository;
 use Dy\Cache\Psr\Item;
 use Dy\Cache\Psr\Pool;
+use Dy\Cache\RedisRepository;
 use Dy\Cache\Test\AnotherItem;
 
 class Psr6Test extends PHPUnit_Framework_TestCase
@@ -13,19 +13,22 @@ class Psr6Test extends PHPUnit_Framework_TestCase
     protected $config = null;
 
     /**
-     * Test RedisCache
+     * Test RedisCache.
+     *
      * @var RedisRepository
      */
     protected $redisRepository;
 
     /**
-     * Test pool
+     * Test pool.
+     *
      * @var Pool
      */
     protected $pool;
 
     /**
-     * Test items
+     * Test items.
+     *
      * @var Item
      */
     protected $item;
@@ -35,7 +38,8 @@ class Psr6Test extends PHPUnit_Framework_TestCase
     protected $items;
 
     /**
-     * Test keys for items
+     * Test keys for items.
+     *
      * @var string
      */
     protected $keys;
@@ -47,15 +51,15 @@ class Psr6Test extends PHPUnit_Framework_TestCase
             'connection' => array(
                 'client' => 'predis',
                 'schema' => 'tcp',
-                'host' => '127.0.0.1',
-                'port' => 6379,
+                'host'   => '127.0.0.1',
+                'port'   => 6379,
             ),
             'namespace' => array(
-                'name' => $this->prefix,
+                'name'         => $this->prefix,
                 'key_set_name' => 'keys',
-                'lazy_record' => true
+                'lazy_record'  => true,
             ),
-            'memory_cache' => false
+            'memory_cache' => false,
         );
 
         $this->redisRepository = new RedisRepository($this->config);
