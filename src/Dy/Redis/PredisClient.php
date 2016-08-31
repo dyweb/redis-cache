@@ -57,7 +57,7 @@ final class PredisClient implements ClientInterface
      */
     public function exists($key)
     {
-        return boolval($this->redis->exists($key));
+        return (bool) $this->redis->exists($key);
     }
 
     /**
@@ -201,7 +201,7 @@ final class PredisClient implements ClientInterface
      */
     public function sismember($key, $member)
     {
-        return boolval($this->redis->sismember($key, $member));
+        return (bool) $this->redis->sismember($key, $member);
     }
 
     /**
