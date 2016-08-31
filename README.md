@@ -1,7 +1,10 @@
 # RedisCache
 
+[![License](https://poser.pugx.org/dyweb/redis-cache/license)](https://packagist.org/packages/dyweb/redis-cache)
 [![Build Status](https://travis-ci.org/dyweb/redis-cache.svg)](https://travis-ci.org/dyweb/redis-cache)
 [![codecov](https://codecov.io/gh/dyweb/redis-cache/branch/master/graph/badge.svg)](https://codecov.io/gh/dyweb/redis-cache)
+[![Latest Stable Version](https://poser.pugx.org/dyweb/redis-cache/v/stable)](https://packagist.org/packages/dyweb/redis-cache)
+[![HHVM Status](http://hhvm.h4cc.de/badge/dyweb/redis-cache.svg?style=flat)](http://hhvm.h4cc.de/package/dyweb/redis-cache)
 
 RedisCache is a simple cache library with key namespaces, Redis support,
 and PSR-6 implementation. To keep it simple, it only provides the simplest
@@ -27,28 +30,10 @@ powerful.
 ## Installation
 
 RedisCache is [Composer](https://getcomposer.org/) and [PSR-4](http://www.php-fig.org/psr/psr-4/)
-ready, however it is still at the development stage. To install it from
-Composer, you need to edit in your `composer.json`:
-
-```js
-{
-    // ...
-    "repositories": [
-        {
-            {
-                "type": "vcs",
-                "url":  "https://github.com/dyweb/redis-cache.git"
-            }
-        }
-    ]
-    // ...
-}
-```
-
-And then you can install as normal:
+ready. To install it, just run the following command:
 
 ```bash
-composer require dyweb/redis-cache:dev-master
+composer require dyweb/redis-cache
 ```
 
 ## Getting Started
