@@ -21,7 +21,6 @@ matrix:
     - php: nightly
       env: PHP_VER=7
   allow_failures:
-    - php: hhvm
     - php: nightly
 
 install:
