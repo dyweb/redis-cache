@@ -1,6 +1,7 @@
 # RedisCache
 
 [![License](https://poser.pugx.org/dyweb/redis-cache/license)](https://packagist.org/packages/dyweb/redis-cache)
+[![StyleCI](https://styleci.io/repos/38742941/shield)](https://styleci.io/repos/38742941)
 [![Build Status](https://travis-ci.org/dyweb/redis-cache.svg)](https://travis-ci.org/dyweb/redis-cache)
 [![codecov](https://codecov.io/gh/dyweb/redis-cache/branch/master/graph/badge.svg)](https://codecov.io/gh/dyweb/redis-cache)
 [![Latest Stable Version](https://poser.pugx.org/dyweb/redis-cache/v/stable)](https://packagist.org/packages/dyweb/redis-cache)
