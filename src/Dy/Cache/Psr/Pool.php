@@ -151,7 +151,7 @@ class Pool implements CacheItemPoolInterface
      *
      * @throws InvalidArgumentException
      *                                  If the $key string is not a legal value
-     *                                    \Psr\Cache\InvalidArgumentException MUST be thrown.
+     *                                  a \Psr\Cache\InvalidArgumentException MUST be thrown.
      *
      * @return bool
      *              True if the item was successfully removed. False if there was an error.
